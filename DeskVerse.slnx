@@ -1,0 +1,21 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Deskverse.Api/Deskverse.Api.csproj" />
+    <Project Path="src/Deskverse.App/Deskverse.App.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="src/Deskverse.Application/Deskverse.Application.csproj" />
+    <Project Path="src/Deskverse.Core/Deskverse.Core.csproj" />
+    <Project Path="src/Deskverse.Infrastructure/Deskverse.Infrastructure.csproj" />
+    <Project Path="src/Deskverse.Intelligence/Deskverse.Intelligence.csproj" />
+    <Project Path="src/Deskverse.Providers/Deskverse.Providers.csproj" />
+    <Project Path="src/Deskverse.Security/Deskverse.Security.csproj" />
+    <Project Path="src/Deskverse.Storage/Deskverse.Storage.csproj" />
+    <Project Path="src/Deskverse.WallpaperEngine/Deskverse.WallpaperEngine.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Deskverse.IntegrationTests/Deskverse.IntegrationTests.csproj" />
+    <Project Path="tests/Deskverse.SecurityTests/Deskverse.SecurityTests.csproj" />
+    <Project Path="tests/Deskverse.UnitTests/Deskverse.UnitTests.csproj" />
+  </Folder>
+</Solution>

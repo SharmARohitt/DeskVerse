@@ -1,0 +1,219 @@
+<Page
+    x:Class="Deskverse.App.Views.LibraryView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:Deskverse.App.Views"
+    xmlns:vm="using:Deskverse.App.ViewModels">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Style="{StaticResource PageHeaderPanel}" Padding="32,24,32,0" MaxWidth="1180" HorizontalAlignment="Left">
+            <TextBlock Text="My Wallpapers" Style="{StaticResource DisplayTitleText}" />
+            <TextBlock Text="{x:Bind ViewModel.SummaryText, Mode=OneWay}" Style="{StaticResource SubtitleText}" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Hidden" HorizontalScrollMode="Disabled">
+            <StackPanel Spacing="10" Padding="32,12,32,12" MaxWidth="1180" HorizontalAlignment="Left">
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        Grid.Column="0"
+                        PlaceholderText="Search your library…"
+                        Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button
+                        Grid.Column="1"
+                        Content="Search"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{x:Bind ViewModel.SearchCommand}" />
+                    <Button
+                        Grid.Column="2"
+                        Content="Import"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Command="{x:Bind ViewModel.ImportCommand}" />
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" Spacing="14">
+                    <ComboBox
+                        Header="Kind"
+                        ItemsSource="{x:Bind ViewModel.KindFilters}"
+                        SelectedItem="{x:Bind ViewModel.KindFilter, Mode=TwoWay}"
+                        MinWidth="110" />
+                    <ComboBox
+                        Header="Sort"
+                        ItemsSource="{x:Bind ViewModel.SortLabels}"
+                        SelectedItem="{x:Bind ViewModel.SortLabel, Mode=TwoWay}"
+                        MinWidth="150" />
+                    <CheckBox Content="Favorites" IsChecked="{x:Bind ViewModel.FavoritesOnly, Mode=TwoWay}" />
+                    <CheckBox Content="Pinned" IsChecked="{x:Bind ViewModel.PinnedOnly, Mode=TwoWay}" />
+                    <CheckBox Content="In cache" IsChecked="{x:Bind ViewModel.CachedOnly, Mode=TwoWay}" />
+                    <Button
+                        Content="Clear filters"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Padding="10,5"
+                        Command="{x:Bind ViewModel.ClearFiltersCommand}"
+                        VerticalAlignment="Bottom" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+
+        <StackPanel
+            Grid.Row="2"
+            Orientation="Horizontal"
+            Spacing="10"
+            Padding="32,0,32,8"
+            Visibility="{x:Bind conv:Converters.ToVisibility(ViewModel.IsBusy), Mode=OneWay}">
+            <ProgressRing Width="18" Height="18" IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}" />
+            <TextBlock Text="Loading…" Style="{StaticResource CaptionText}" VerticalAlignment="Center" />
+        </StackPanel>
+
+        <StackPanel
+            Grid.Row="3"
+            Spacing="10"
+            Padding="32,40,32,32"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Visibility="{x:Bind conv:Converters.ToVisibility(ViewModel.HasNoItems), Mode=OneWay}">
+            <FontIcon Glyph="&#xEB9F;" FontSize="44" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" />
+            <TextBlock Text="Your library is empty" Style="{StaticResource SubtitleText}" HorizontalAlignment="Center" />
+            <TextBlock Text="Import wallpapers from this PC, or download some from Discover." Style="{StaticResource CaptionText}" HorizontalAlignment="Center" />
+            <Button
+                Content="Import wallpapers"
+                Style="{StaticResource PrimaryButtonStyle}"
+                Command="{x:Bind ViewModel.ImportCommand}"
+                HorizontalAlignment="Center" />
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="3" Padding="32,4,32,12">
+            <ItemsRepeater ItemsSource="{x:Bind ViewModel.Items}">
+                <ItemsRepeater.Layout>
+                    <UniformGridLayout MinItemWidth="270" MinItemHeight="280" MinRowSpacing="14" MinColumnSpacing="14" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="vm:WallpaperItemViewModel">
+                        <Border Style="{StaticResource PanelStyle}" Padding="10">
+                            <StackPanel Spacing="8">
+                                <Border Style="{StaticResource CardStyle}" Height="152">
+                                    <Grid>
+                                        <FontIcon
+                                            Glyph="{x:Bind KindGlyph}"
+                                            FontSize="34"
+                                            Foreground="{StaticResource TextMutedBrush}"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center" />
+                                        <Image
+                                            Source="{x:Bind conv:Converters.ToImage(ThumbnailPath), Mode=OneWay}"
+                                            Stretch="UniformToFill" />
+                                        <Border
+                                            Style="{StaticResource InfoPillStyle}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            Margin="6">
+                                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                                <FontIcon Glyph="{x:Bind KindGlyph}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" />
+                                                <TextBlock Text="{x:Bind KindLabel}" Style="{StaticResource CaptionText}" />
+                                            </StackPanel>
+                                        </Border>
+                                        <StackPanel Orientation="Horizontal" Spacing="4" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="6">
+                                            <Border Style="{StaticResource InfoPillStyle}" Visibility="{x:Bind conv:Converters.ToVisibility(IsFavorite), Mode=OneWay}">
+                                                <FontIcon Glyph="&#xEB52;" FontSize="10" Foreground="{StaticResource AccentAmberBrush}" />
+                                            </Border>
+                                            <Border Style="{StaticResource InfoPillStyle}" Visibility="{x:Bind conv:Converters.ToVisibility(IsPinned), Mode=OneWay}">
+                                                <FontIcon Glyph="&#xE718;" FontSize="10" Foreground="{StaticResource AccentVioletBrush}" />
+                                            </Border>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <TextBlock Text="{x:Bind Title}" Style="{StaticResource SubtitleText}" FontWeight="SemiBold" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                <StackPanel Spacing="2">
+                                    <TextBlock Text="{x:Bind DimensionsText}" Style="{StaticResource CaptionText}" />
+                                    <TextBlock Text="{x:Bind SizeText}" Style="{StaticResource CaptionText}" />
+                                    <TextBlock Text="{x:Bind CategoriesText}" Style="{StaticResource CaptionText}" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Spacing="4">
+                                    <Border Style="{StaticResource InfoPillStyle}">
+                                        <TextBlock Text="{x:Bind UseCountText}" Style="{StaticResource CaptionText}" />
+                                    </Border>
+                                    <Border Style="{StaticResource InfoPillStyle}">
+                                        <TextBlock Text="{x:Bind CachedText}" Style="{StaticResource CaptionText}" Foreground="{x:Bind conv:Converters.TealWhenActive(IsCached), Mode=OneWay}" />
+                                    </Border>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Spacing="6">
+                                    <Button
+                                        Content="Apply"
+                                        Style="{StaticResource PrimaryButtonStyle}"
+                                        Padding="12,5"
+                                        Command="{x:Bind ApplyCommand}" />
+                                    <Button
+                                        Content="Studio"
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        Padding="10,5"
+                                        Command="{x:Bind SelectCommand}" />
+                                    <Button
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        Padding="8,5"
+                                        Command="{x:Bind ToggleFavoriteCommand}"
+                                        ToolTipService.ToolTip="Favorite — favorites score higher in recommendations">
+                                        <FontIcon Glyph="{x:Bind FavoriteGlyph, Mode=OneWay}" FontSize="14" Foreground="{x:Bind conv:Converters.AmberWhenActive(IsFavorite), Mode=OneWay}" />
+                                    </Button>
+                                    <Button
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        Padding="8,5"
+                                        Command="{x:Bind TogglePinCommand}"
+                                        ToolTipService.ToolTip="Pin — pinned wallpapers are never cleaned from the cache">
+                                        <FontIcon Glyph="&#xE718;" FontSize="14" Foreground="{x:Bind conv:Converters.AmberWhenActive(IsPinned), Mode=OneWay}" />
+                                    </Button>
+                                    <Button
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        Padding="8,5"
+                                        Command="{x:Bind ToggleDislikeCommand}"
+                                        ToolTipService.ToolTip="Not for me — hides this style from recommendations">
+                                        <FontIcon Glyph="&#xE711;" FontSize="14" Foreground="{x:Bind conv:Converters.DangerWhenActive(IsDisliked), Mode=OneWay}" />
+                                    </Button>
+                                    <Button
+                                        Style="{StaticResource SecondaryButtonStyle}"
+                                        Padding="8,5"
+                                        Command="{x:Bind RemoveFromCacheCommand}"
+                                        ToolTipService.ToolTip="Free space — removes the cached copy, keeps the library entry">
+                                        <FontIcon Glyph="&#xE7B3;" FontSize="14" Foreground="{StaticResource TextSecondaryBrush}" />
+                                    </Button>
+                                    <Button
+                                        Style="{StaticResource DangerButtonStyle}"
+                                        Padding="8,5"
+                                        Command="{x:Bind DeleteCommand}"
+                                        ToolTipService.ToolTip="Delete from library — originals on disk are never touched">
+                                        <FontIcon Glyph="&#xE74D;" FontSize="14" />
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </ScrollViewer>
+
+        <StackPanel
+            Grid.Row="4"
+            Padding="32,0,32,20"
+            HorizontalAlignment="Center"
+            Visibility="{x:Bind conv:Converters.ToVisibility(ViewModel.CanLoadMore), Mode=OneWay}">
+            <Button
+                Content="Load more"
+                Style="{StaticResource SecondaryButtonStyle}"
+                Command="{x:Bind ViewModel.LoadMoreCommand}" />
+        </StackPanel>
+    </Grid>
+</Page>

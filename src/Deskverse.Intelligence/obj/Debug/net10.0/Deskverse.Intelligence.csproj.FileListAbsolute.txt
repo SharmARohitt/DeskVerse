@@ -1,0 +1,15 @@
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\Deskverse.Intelligence.csproj.AssemblyReference.cache
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\Deskverse.Intelligence.GeneratedMSBuildEditorConfig.editorconfig
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\Deskverse.Intelligence.AssemblyInfoInputs.cache
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\Deskverse.Intelligence.AssemblyInfo.cs
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\Deskverse.Intelligence.csproj.CoreCompileInputs.cache
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\bin\Debug\net10.0\Deskverse.Intelligence.deps.json
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\bin\Debug\net10.0\Deskverse.Intelligence.dll
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\bin\Debug\net10.0\Deskverse.Intelligence.pdb
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\bin\Debug\net10.0\Deskverse.Core.dll
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\bin\Debug\net10.0\Deskverse.Core.pdb
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\Deskvers.07726C60.Up2Date
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\Deskverse.Intelligence.dll
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\refint\Deskverse.Intelligence.dll
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\Deskverse.Intelligence.pdb
+E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\ref\Deskverse.Intelligence.dll

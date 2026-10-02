@@ -1,0 +1,171 @@
+<Page
+    x:Class="Deskverse.App.Views.DiscoverView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:Deskverse.App.Views"
+    xmlns:app="using:Deskverse.Application"
+    xmlns:vm="using:Deskverse.App.ViewModels">
+
+    <Grid x:Name="Root">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0">
+            <StackPanel Spacing="16" Padding="32,24,32,12" MaxWidth="1180" HorizontalAlignment="Left">
+                <StackPanel Style="{StaticResource PageHeaderPanel}">
+                    <TextBlock Text="Discover" Style="{StaticResource DisplayTitleText}" />
+                    <TextBlock Text="Browse open wallpaper catalogs and download safely into your managed cache." Style="{StaticResource SubtitleText}" />
+                </StackPanel>
+
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        Grid.Column="0"
+                        PlaceholderText="Search wallpapers (e.g. mountains, minimal, synthwave)…"
+                        Text="{x:Bind ViewModel.SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button
+                        Grid.Column="1"
+                        Content="Search"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Command="{x:Bind ViewModel.SearchCommand}" />
+                    <Button
+                        Grid.Column="2"
+                        Content="Trending"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        Command="{x:Bind ViewModel.LoadTrendingCommand}" />
+                </Grid>
+
+                <ItemsControl ItemsSource="{x:Bind ViewModel.Categories}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" Spacing="6" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <Button
+                                Content="{Binding}"
+                                Command="{Binding DataContext.SearchCategoryCommand, ElementName=Root}"
+                                CommandParameter="{Binding}"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Padding="12,4" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                    <TextBlock Text="Sources:" Style="{StaticResource CaptionText}" VerticalAlignment="Center" />
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.Providers}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="6" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="app:ProviderInfo">
+                                <Border Style="{StaticResource InfoPillStyle}">
+                                    <TextBlock Text="{x:Bind DisplayName}" Style="{StaticResource CaptionText}" Foreground="{StaticResource AccentTealBrush}" />
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <InfoBar
+                    IsOpen="{x:Bind ViewModel.HasFailures, Mode=OneWay}"
+                    IsClosable="False"
+                    Title="Some sources could not be reached"
+                    Message="{x:Bind ViewModel.FailureSummary, Mode=OneWay}"
+                    Severity="Warning" />
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="12" Padding="32,4,32,8">
+                <TextBlock Text="{x:Bind ViewModel.StatusText, Mode=OneWay}" Style="{StaticResource SubtitleText}" VerticalAlignment="Center" />
+                <ProgressRing
+                    Width="18"
+                    Height="18"
+                    IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}"
+                    Visibility="{x:Bind conv:Converters.ToVisibility(ViewModel.IsBusy), Mode=OneWay}" />
+            </StackPanel>
+
+            <StackPanel
+                Grid.Row="1"
+                Spacing="10"
+                Padding="32,40,32,32"
+                HorizontalAlignment="Center"
+                Visibility="{x:Bind conv:Converters.NegateVisibility(ViewModel.HasResults), Mode=OneWay}">
+                <FontIcon Glyph="&#xE71D;" FontSize="44" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" />
+                <TextBlock Text="Nothing to show yet" Style="{StaticResource SubtitleText}" HorizontalAlignment="Center" />
+                <TextBlock Text="Check your connection, or search for something else." Style="{StaticResource CaptionText}" HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="1" Padding="32,0,32,24">
+                <ItemsRepeater ItemsSource="{x:Bind ViewModel.Results}">
+                    <ItemsRepeater.Layout>
+                        <UniformGridLayout MinItemWidth="280" MinItemHeight="240" MinRowSpacing="14" MinColumnSpacing="14" />
+                    </ItemsRepeater.Layout>
+                    <ItemsRepeater.ItemTemplate>
+                        <DataTemplate x:DataType="vm:ProviderWallpaperItemViewModel">
+                            <Border Style="{StaticResource PanelStyle}" Padding="12">
+                                <StackPanel Spacing="8">
+                                    <Border Style="{StaticResource CardStyle}" Height="110">
+                                        <Grid>
+                                            <FontIcon
+                                                Glyph="{x:Bind KindGlyph}"
+                                                FontSize="34"
+                                                Foreground="{StaticResource TextMutedBrush}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center" />
+                                            <Border
+                                                Style="{StaticResource InfoPillStyle}"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Bottom"
+                                                Margin="6">
+                                                <TextBlock Text="{x:Bind KindLabel}" Style="{StaticResource CaptionText}" />
+                                            </Border>
+                                            <Border
+                                                Background="#6614161c"
+                                                CornerRadius="8"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch"
+                                                Visibility="{x:Bind conv:Converters.ToVisibility(IsDownloading), Mode=OneWay}">
+                                                <ProgressRing IsActive="True" Width="26" Height="26" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                    <TextBlock Text="{x:Bind Title}" Style="{StaticResource SubtitleText}" FontWeight="SemiBold" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Text="{x:Bind ProviderBadge}" Style="{StaticResource CaptionText}" Foreground="{StaticResource AccentVioletBrush}" />
+                                        <TextBlock Text="{x:Bind DimensionsText}" Style="{StaticResource CaptionText}" />
+                                        <TextBlock Text="{x:Bind LicenseText}" Style="{StaticResource CaptionText}" Visibility="{x:Bind conv:Converters.ToVisibility(LicenseText), Mode=OneWay}" />
+                                    </StackPanel>
+                                    <TextBlock Text="{x:Bind CategoriesText}" Style="{StaticResource CaptionText}" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                    <Button
+                                        Content="Download"
+                                        Style="{StaticResource PrimaryButtonStyle}"
+                                        Padding="12,5"
+                                        HorizontalAlignment="Stretch"
+                                        Command="{x:Bind DownloadCommand}"
+                                        IsEnabled="{x:Bind conv:Converters.Not(IsDownloading), Mode=OneWay}" />
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsRepeater.ItemTemplate>
+                </ItemsRepeater>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,16 @@
+<Project>
+
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Version>0.1.0</Version>
+    <Product>DeskVerse</Product>
+    <Company>DeskVerse</Company>
+    <Copyright>Copyright © DeskVerse contributors</Copyright>
+    <RepositoryUrl>https://example.invalid/deskverse</RepositoryUrl>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <InvariantGlobalization>false</InvariantGlobalization>
+  </PropertyGroup>
+
+</Project>

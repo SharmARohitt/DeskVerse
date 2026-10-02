@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "dlEkBzyQVv0=",
+  "success": true,
+  "projectFilePath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Providers\\Deskverse.Providers.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.12\\microsoft.extensions.dependencyinjection.abstractions.10.0.12.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\10.0.12\\microsoft.extensions.logging.abstractions.10.0.12.nupkg.sha512"
+  ],
+  "logs": []
+}
