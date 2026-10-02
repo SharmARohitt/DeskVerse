@@ -744,11 +744,11 @@
   "project": {
     "version": "0.1.0",
     "restore": {
-      "projectUniqueName": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Security\\Deskverse.Security.csproj",
+      "projectUniqueName": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Security\\Deskverse.Security.csproj",
       "projectName": "Deskverse.Security",
-      "projectPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Security\\Deskverse.Security.csproj",
+      "projectPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Security\\Deskverse.Security.csproj",
       "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-      "outputPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Security\\obj\\",
+      "outputPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Security\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -764,8 +764,8 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Core\\Deskverse.Core.csproj": {
-              "projectPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Core\\Deskverse.Core.csproj"
+            "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Core\\Deskverse.Core.csproj": {
+              "projectPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Core\\Deskverse.Core.csproj"
             }
           }
         }

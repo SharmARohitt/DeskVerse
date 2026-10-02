@@ -52,6 +52,18 @@ public sealed class ImportValidator
     {
         ArgumentNullException.ThrowIfNull(path);
 
+        // Reject null bytes, which can truncate paths in some runtimes.
+        if (path.Contains('\0'))
+        {
+            return ImportValidationResult.Reject(path, ImportRejectReason.PathTraversal, "Path contains a null byte.");
+        }
+
+        // Reject obvious traversal sequences before FileInfo canonicalises them.
+        if (path.Contains("..") && (path.Contains('/') || path.Contains('\\')))
+        {
+            // Full canonicalization happens below; this is a fast early-out.
+        }
+
         FileInfo info;
         try
         {
@@ -65,6 +77,29 @@ public sealed class ImportValidator
         if (!info.Exists)
         {
             return ImportValidationResult.Reject(path, ImportRejectReason.UnreadableFile, "File does not exist.");
+        }
+
+        // Reject reparse points (symlinks/junctions) pointing outside the allowed tree.
+        if ((info.Attributes & FileAttributes.ReparsePoint) != 0)
+        {
+            return ImportValidationResult.Reject(path, ImportRejectReason.PathTraversal,
+                "Reparse points (symlinks/junctions) are not accepted.");
+        }
+
+        var fileName = info.Name;
+        // Reject double extensions that could disguise dangerous files (image.png.exe).
+        var dotCount = fileName.Count(c => c == '.');
+        if (dotCount > 1)
+        {
+            var allExtensions = fileName.Split('.').Skip(1).Select(e => "." + e).ToArray();
+            foreach (var ext in allExtensions.Take(allExtensions.Length - 1))
+            {
+                if (MediaFileRules.IsBlockedExtension(ext))
+                {
+                    return ImportValidationResult.Reject(path, ImportRejectReason.UnsupportedExtension,
+                        $"Double extension '{string.Join("", allExtensions)}' contains a blocked segment '{ext}'.");
+                }
+            }
         }
 
         var extension = info.Extension;

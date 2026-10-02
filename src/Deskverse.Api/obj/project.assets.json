@@ -62,7 +62,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
-          "Deskverse.Core": "0.1.0"
+          "Deskverse.Core": "0.1.0",
+          "Deskverse.Security": "0.1.0"
         },
         "compile": {
           "bin/placeholder/Deskverse.Providers.dll": {}
@@ -179,11 +180,11 @@
   "project": {
     "version": "0.1.0",
     "restore": {
-      "projectUniqueName": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Api\\Deskverse.Api.csproj",
+      "projectUniqueName": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Api\\Deskverse.Api.csproj",
       "projectName": "Deskverse.Api",
-      "projectPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Api\\Deskverse.Api.csproj",
+      "projectPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Api\\Deskverse.Api.csproj",
       "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-      "outputPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Api\\obj\\",
+      "outputPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -199,8 +200,8 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Application\\Deskverse.Application.csproj": {
-              "projectPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Application\\Deskverse.Application.csproj"
+            "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Application\\Deskverse.Application.csproj": {
+              "projectPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Application\\Deskverse.Application.csproj"
             }
           }
         }

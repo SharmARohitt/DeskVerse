@@ -123,6 +123,23 @@ namespace Deskverse.Infrastructure.Migrations
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("RotationEnabled")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RotationIntervalSeconds")
+                        .HasDefaultValue(3600)
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RotationMode")
+                        .HasDefaultValue(0)
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid?>("RotationCollectionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("LastActiveWallpaperId")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Preferences");

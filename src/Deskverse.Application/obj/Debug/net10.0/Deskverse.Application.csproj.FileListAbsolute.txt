@@ -21,3 +21,4 @@ E:\HackQuest\DeskVerse\src\Deskverse.Application\obj\Debug\net10.0\Deskverse.App
 E:\HackQuest\DeskVerse\src\Deskverse.Application\obj\Debug\net10.0\refint\Deskverse.Application.dll
 E:\HackQuest\DeskVerse\src\Deskverse.Application\obj\Debug\net10.0\Deskverse.Application.pdb
 E:\HackQuest\DeskVerse\src\Deskverse.Application\obj\Debug\net10.0\ref\Deskverse.Application.dll
+e:\HackQuest\DeskVerse\src\Deskverse.Application\obj\Debug\net10.0\Deskverse.Application.sourcelink.json

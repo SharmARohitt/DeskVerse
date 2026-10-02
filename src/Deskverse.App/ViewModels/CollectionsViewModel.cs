@@ -57,6 +57,12 @@ public partial class CollectionsViewModel : ViewModelBase, IRecipient<LibraryCha
 
     public ObservableCollection<WallpaperItemViewModel> SelectedItems { get; } = [];
 
+    public bool HasNoSelectedItems => SelectedItems.Count == 0;
+
+    public string EmptyStateText => SelectedCollection is null
+        ? "Select a collection on the left."
+        : "This collection has no wallpapers yet.";
+
     [RelayCommand]
     public async Task LoadAsync()
     {
@@ -274,6 +280,9 @@ public partial class CollectionsViewModel : ViewModelBase, IRecipient<LibraryCha
             SelectedDetailSubtitle = items.Length == 0
                 ? "No wallpapers in this collection yet."
                 : $"{items.Length} wallpaper{(items.Length == 1 ? string.Empty : "s")}";
+
+            OnPropertyChanged(nameof(HasNoSelectedItems));
+            OnPropertyChanged(nameof(EmptyStateText));
             return true;
         }).ConfigureAwait(true);
 

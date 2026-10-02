@@ -15,3 +15,4 @@ E:\HackQuest\DeskVerse\src\Deskverse.Infrastructure\obj\Debug\net10.0\refint\Des
 E:\HackQuest\DeskVerse\src\Deskverse.Infrastructure\obj\Debug\net10.0\Deskverse.Infrastructure.pdb
 E:\HackQuest\DeskVerse\src\Deskverse.Infrastructure\obj\Debug\net10.0\Deskverse.Infrastructure.genruntimeconfig.cache
 E:\HackQuest\DeskVerse\src\Deskverse.Infrastructure\obj\Debug\net10.0\ref\Deskverse.Infrastructure.dll
+e:\HackQuest\DeskVerse\src\Deskverse.Infrastructure\obj\Debug\net10.0\Deskverse.Infrastructure.sourcelink.json

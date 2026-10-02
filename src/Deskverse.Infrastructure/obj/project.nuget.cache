@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "FGcAFb42aQA=",
+  "dgSpecHash": "tJLlztd5yys=",
   "success": true,
-  "projectFilePath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Infrastructure\\Deskverse.Infrastructure.csproj",
+  "projectFilePath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Infrastructure\\Deskverse.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.build.framework\\18.0.2\\microsoft.build.framework.18.0.2.nupkg.sha512",

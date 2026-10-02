@@ -2929,11 +2929,11 @@
   "project": {
     "version": "0.1.0",
     "restore": {
-      "projectUniqueName": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Infrastructure\\Deskverse.Infrastructure.csproj",
+      "projectUniqueName": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Infrastructure\\Deskverse.Infrastructure.csproj",
       "projectName": "Deskverse.Infrastructure",
-      "projectPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Infrastructure\\Deskverse.Infrastructure.csproj",
+      "projectPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Infrastructure\\Deskverse.Infrastructure.csproj",
       "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-      "outputPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Infrastructure\\obj\\",
+      "outputPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -2949,8 +2949,8 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Core\\Deskverse.Core.csproj": {
-              "projectPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Core\\Deskverse.Core.csproj"
+            "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Core\\Deskverse.Core.csproj": {
+              "projectPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Core\\Deskverse.Core.csproj"
             }
           }
         }

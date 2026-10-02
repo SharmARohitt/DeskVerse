@@ -79,6 +79,7 @@ public sealed class LocalApiHost : IAsyncDisposable
             Forward<SystemHealthService>(builder.Services);
             Forward<LocalApiState>(builder.Services);
             Forward<ApiTokenStore>(builder.Services);
+            Forward<RotationScheduler>(builder.Services);
 
             var app = builder.Build();
 

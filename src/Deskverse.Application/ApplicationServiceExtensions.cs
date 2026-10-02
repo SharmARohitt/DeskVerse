@@ -31,6 +31,7 @@ public static class ApplicationServiceExtensions
         services.AddSingleton<CollectionsService>();
         services.AddSingleton<SystemHealthService>();
         services.AddSingleton<LocalApiState>();
+        services.AddSingleton<RotationScheduler>();
         return services;
     }
 }

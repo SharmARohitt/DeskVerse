@@ -5,7 +5,9 @@ using CommunityToolkit.Mvvm.Input;
 using Deskverse.App.Messaging;
 using Deskverse.App.Services;
 using Deskverse.Core;
+using Deskverse.Core.Abstractions;
 using Deskverse.Core.Entities;
+using Microsoft.UI.Dispatching;
 
 /// <summary>
 /// UI wrapper for a library wallpaper. Commands delegate to the shared

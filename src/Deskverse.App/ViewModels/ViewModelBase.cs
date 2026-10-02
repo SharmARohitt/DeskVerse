@@ -1,6 +1,7 @@
 namespace Deskverse.App.ViewModels;
 
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Dispatching;
 
 /// <summary>
 /// Base view model with a UI dispatcher captured at construction time. View

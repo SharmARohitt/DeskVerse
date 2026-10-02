@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "R/A2zLFE/Og=",
+  "dgSpecHash": "RyHSsUCjp7k=",
   "success": true,
-  "projectFilePath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Api\\Deskverse.Api.csproj",
+  "projectFilePath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Api\\Deskverse.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\system.security.cryptography.protecteddata\\10.0.12\\system.security.cryptography.protecteddata.10.0.12.nupkg.sha512"
   ],

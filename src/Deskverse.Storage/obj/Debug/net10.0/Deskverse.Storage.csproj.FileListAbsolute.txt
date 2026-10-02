@@ -15,3 +15,4 @@ E:\HackQuest\DeskVerse\src\Deskverse.Storage\obj\Debug\net10.0\Deskverse.Storage
 E:\HackQuest\DeskVerse\src\Deskverse.Storage\obj\Debug\net10.0\refint\Deskverse.Storage.dll
 E:\HackQuest\DeskVerse\src\Deskverse.Storage\obj\Debug\net10.0\Deskverse.Storage.pdb
 E:\HackQuest\DeskVerse\src\Deskverse.Storage\obj\Debug\net10.0\ref\Deskverse.Storage.dll
+e:\HackQuest\DeskVerse\src\Deskverse.Storage\obj\Debug\net10.0\Deskverse.Storage.sourcelink.json

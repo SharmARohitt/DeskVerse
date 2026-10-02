@@ -31,3 +31,4 @@ E:\HackQuest\DeskVerse\src\Deskverse.WallpaperEngine\obj\Debug\net10.0-windows10
 E:\HackQuest\DeskVerse\src\Deskverse.WallpaperEngine\obj\Debug\net10.0-windows10.0.19041.0\qualifiers.txt
 E:\HackQuest\DeskVerse\src\Deskverse.WallpaperEngine\obj\Debug\net10.0-windows10.0.19041.0\qualifiers.txt.intermediate
 E:\HackQuest\DeskVerse\src\Deskverse.WallpaperEngine\obj\Debug\net10.0-windows10.0.19041.0\MultipleQualifiersPerDimensionFound.txt
+e:\HackQuest\DeskVerse\src\Deskverse.WallpaperEngine\obj\Debug\net10.0-windows10.0.19041.0\Deskverse.WallpaperEngine.sourcelink.json

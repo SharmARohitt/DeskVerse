@@ -13,3 +13,4 @@ E:\HackQuest\DeskVerse\src\Deskverse.Security\obj\Debug\net10.0\Deskverse.Securi
 E:\HackQuest\DeskVerse\src\Deskverse.Security\obj\Debug\net10.0\refint\Deskverse.Security.dll
 E:\HackQuest\DeskVerse\src\Deskverse.Security\obj\Debug\net10.0\Deskverse.Security.pdb
 E:\HackQuest\DeskVerse\src\Deskverse.Security\obj\Debug\net10.0\ref\Deskverse.Security.dll
+e:\HackQuest\DeskVerse\src\Deskverse.Security\obj\Debug\net10.0\Deskverse.Security.sourcelink.json

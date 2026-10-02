@@ -30,5 +30,7 @@ public static class Converters
     public static Brush TealWhenActive(bool value) =>
         value ? Brush("AccentTealBrush") : Brush("TextMutedBrush");
 
+    public static string EyeGlyph(bool revealed) => revealed ? "\uE7B3" : "\uE7B3";  // \uED1A show / \uED1B hide
+
     private static Brush Brush(string key) => (Brush)Application.Current.Resources[key];
 }

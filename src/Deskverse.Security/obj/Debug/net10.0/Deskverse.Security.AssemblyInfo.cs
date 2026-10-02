@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute(("DeskVerse security subsystem: media validation, safe paths, URL policy, safe down" +
     "loads."))]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("0.1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("0.1.0+e0e4d83d853980ccb9494a3fe76189a30dafe168")]
 [assembly: System.Reflection.AssemblyProductAttribute("DeskVerse")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Deskverse.Security")]
 [assembly: System.Reflection.AssemblyVersionAttribute("0.1.0.0")]

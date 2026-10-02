@@ -46,5 +46,20 @@ public class UserPreferences
     /// <summary>True once the user has chosen a cache location during first-run setup.</summary>
     public bool FirstRunComplete { get; set; }
 
+    // ── Rotation scheduler ─────────────────────────────────────────────────
+
+    public bool RotationEnabled { get; set; }
+
+    /// <summary>Seconds between automatic wallpaper changes. Default 3600 (1 h).</summary>
+    public int RotationIntervalSeconds { get; set; } = 3600;
+
+    public RotationMode RotationMode { get; set; } = RotationMode.Random;
+
+    /// <summary>Collection id used when RotationMode == Collection; null means all wallpapers.</summary>
+    public Guid? RotationCollectionId { get; set; }
+
+    /// <summary>Wallpaper id that was active the last time the app exited (for restore).</summary>
+    public Guid? LastActiveWallpaperId { get; set; }
+
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 }

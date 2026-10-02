@@ -13,3 +13,4 @@ E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\Deskverse.In
 E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\refint\Deskverse.Intelligence.dll
 E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\Deskverse.Intelligence.pdb
 E:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\ref\Deskverse.Intelligence.dll
+e:\HackQuest\DeskVerse\src\Deskverse.Intelligence\obj\Debug\net10.0\Deskverse.Intelligence.sourcelink.json

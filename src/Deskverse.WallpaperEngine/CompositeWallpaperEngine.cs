@@ -45,7 +45,10 @@ public sealed class CompositeWallpaperEngine : IWallpaperEngine
             _logger.LogInformation("Applying static wallpaper {Id} ({Title}).", request.WallpaperId, request.Title);
         }
 
-        IWallpaperEngine engine = request.Kind == WallpaperKind.Video ? _videoEngine : _staticEngine;
+        // GIF files are animated through the video engine (MediaPlayer handles GIF natively
+        // on Windows). Route by effective kind so GIFs loop properly.
+        var effectiveKind = IsAnimatedFormat(request.AbsolutePath) ? WallpaperKind.Video : request.Kind;
+        IWallpaperEngine engine = effectiveKind == WallpaperKind.Video ? _videoEngine : _staticEngine;
 
         // Switching from video to anything else must tear the video layer down first.
         lock (_gate)
@@ -57,7 +60,7 @@ public sealed class CompositeWallpaperEngine : IWallpaperEngine
             }
         }
 
-        var result = await engine.ApplyAsync(request, cancellationToken);
+        var result = await engine.ApplyAsync(request with { Kind = effectiveKind }, cancellationToken);
         if (result.Success)
         {
             lock (_gate)
@@ -67,11 +70,17 @@ public sealed class CompositeWallpaperEngine : IWallpaperEngine
                     _previous = _current;
                 }
 
-                _current = request;
+                _current = request with { Kind = effectiveKind };
             }
         }
 
         return result;
+    }
+
+    private static bool IsAnimatedFormat(string path)
+    {
+        var ext = Path.GetExtension(path).TrimStart('.').ToLowerInvariant();
+        return ext == "gif";
     }
 
     public async Task<OperationResult> StopAsync(CancellationToken cancellationToken = default)

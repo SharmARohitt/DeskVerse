@@ -11,6 +11,9 @@ using Deskverse.Infrastructure.Persistence;
 using Deskverse.WallpaperEngine;
 using Deskverse.WallpaperEngine.Playback;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Dispatching;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using Serilog;
 using Serilog.Events;
 
@@ -90,6 +93,10 @@ public partial class App : Application
                 .WriteTo.Debug(restrictedToMinimumLevel: LogEventLevel.Debug);
         });
 
+        // Empty IConfiguration so provider options binding doesn't throw on startup.
+        services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(
+            _ => new Microsoft.Extensions.Configuration.ConfigurationBuilder().Build());
+
         services.AddDeskverseInfrastructure();
         services.AddDeskverseProviders();
         services.AddDeskverseWallpaperEngine();
@@ -102,6 +109,7 @@ public partial class App : Application
         services.AddSingleton<NotificationService>();
         services.AddSingleton<PickerService>();
         services.AddSingleton<WallpaperActions>();
+        services.AddSingleton<DisplayMonitorService>();
 
         services.AddSingleton<MainViewModel>();
         services.AddSingleton<HomeViewModel>();
@@ -111,6 +119,7 @@ public partial class App : Application
         services.AddSingleton<StudioViewModel>();
         services.AddSingleton<StorageViewModel>();
         services.AddSingleton<SettingsViewModel>();
+        services.AddSingleton<RotationViewModel>();
 
         return services.BuildServiceProvider();
     }
@@ -162,6 +171,13 @@ public partial class App : Application
             }).ConfigureAwait(false);
 
             _services.GetRequiredService<ResourceGovernor>().Start();
+
+            // Start display topology monitoring (raises DisplayTopologyChangedMessage on changes).
+            _ = _services.GetRequiredService<DisplayMonitorService>();
+
+            // Start the wallpaper rotation scheduler if enabled in preferences.
+            var rotationScheduler = _services.GetRequiredService<RotationScheduler>();
+            await rotationScheduler.StartAsync().ConfigureAwait(false);
 
             var apiHost = _services.GetRequiredService<LocalApiHost>();
             await apiHost.StartAsync().ConfigureAwait(false);
@@ -225,6 +241,9 @@ public partial class App : Application
         {
             var apiHost = _services.GetRequiredService<LocalApiHost>();
             await apiHost.StopAsync().ConfigureAwait(false);
+
+            var rotationScheduler = _services.GetRequiredService<RotationScheduler>();
+            await rotationScheduler.StopAsync().ConfigureAwait(false);
 
             var governor = _services.GetRequiredService<ResourceGovernor>();
             await governor.StopAsync().ConfigureAwait(false);

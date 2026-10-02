@@ -1,0 +1,170 @@
+<Page
+    x:Class="Deskverse.App.Views.SettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="using:Deskverse.App.Views"
+    xmlns:vm="using:Deskverse.App.ViewModels">
+
+    <ScrollViewer Padding="32,24,32,24">
+        <StackPanel Spacing="20" MaxWidth="800" HorizontalAlignment="Left">
+
+            <StackPanel Style="{StaticResource PageHeaderPanel}">
+                <TextBlock Text="Settings" Style="{StaticResource DisplayTitleText}" />
+                <TextBlock Text="{x:Bind ViewModel.VersionText}" Style="{StaticResource CaptionText}" />
+            </StackPanel>
+
+            <!-- Playback -->
+            <Border Style="{StaticResource PanelStyle}">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Playback" Style="{StaticResource SectionTitleText}" />
+                    <ToggleSwitch Header="Allow video wallpapers" IsOn="{x:Bind ViewModel.AllowVideoWallpapers, Mode=TwoWay}" AutomationProperties.Name="Allow video wallpapers" />
+                    <ToggleSwitch Header="Pause video on battery" IsOn="{x:Bind ViewModel.PauseVideoOnBattery, Mode=TwoWay}" AutomationProperties.Name="Pause video when on battery" />
+                    <ToggleSwitch Header="Pause video when an app is fullscreen" IsOn="{x:Bind ViewModel.PauseVideoOnFullscreen, Mode=TwoWay}" AutomationProperties.Name="Pause video on fullscreen" />
+                    <ToggleSwitch Header="Animated previews in library" IsOn="{x:Bind ViewModel.AnimatedPreviewsEnabled, Mode=TwoWay}" AutomationProperties.Name="Animated previews" />
+                    <ComboBox
+                        Header="Background resource policy"
+                        ItemsSource="{x:Bind ViewModel.BackgroundPolicyLabels}"
+                        SelectedItem="{x:Bind ViewModel.BackgroundPolicyLabel, Mode=TwoWay}"
+                        HorizontalAlignment="Stretch"
+                        AutomationProperties.Name="Background resource policy" />
+                </StackPanel>
+            </Border>
+
+            <!-- Storage -->
+            <Border Style="{StaticResource PanelStyle}">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Storage" Style="{StaticResource SectionTitleText}" />
+                    <ComboBox
+                        Header="Cache size limit"
+                        ItemsSource="{x:Bind ViewModel.StorageLimitLabels}"
+                        SelectedItem="{x:Bind ViewModel.StorageLimitLabel, Mode=TwoWay}"
+                        HorizontalAlignment="Stretch"
+                        AutomationProperties.Name="Cache size limit" />
+                    <ToggleSwitch Header="Automatic cleanup when limit is approached" IsOn="{x:Bind ViewModel.AutoCleanupEnabled, Mode=TwoWay}" AutomationProperties.Name="Automatic cache cleanup" />
+                    <TextBlock Text="{x:Bind ViewModel.CacheDirectoryText, Mode=OneWay}" Style="{StaticResource CaptionText}" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <!-- Wallpaper rotation -->
+            <Border Style="{StaticResource PanelStyle}">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Rotation Scheduler" Style="{StaticResource SectionTitleText}" />
+                    <ToggleSwitch Header="Enable automatic rotation" IsOn="{x:Bind RotationVm.IsEnabled, Mode=TwoWay}" AutomationProperties.Name="Enable wallpaper rotation" />
+                    <ComboBox
+                        Header="Rotate every"
+                        ItemsSource="{x:Bind RotationVm.IntervalLabels}"
+                        SelectedItem="{x:Bind RotationVm.IntervalLabel, Mode=TwoWay}"
+                        HorizontalAlignment="Stretch"
+                        IsEnabled="{x:Bind RotationVm.IsEnabled, Mode=OneWay}"
+                        AutomationProperties.Name="Rotation interval" />
+                    <ComboBox
+                        Header="Rotation mode"
+                        ItemsSource="{x:Bind RotationVm.ModesLabels}"
+                        SelectedItem="{x:Bind RotationVm.RotationModeLabel, Mode=TwoWay}"
+                        HorizontalAlignment="Stretch"
+                        IsEnabled="{x:Bind RotationVm.IsEnabled, Mode=OneWay}"
+                        AutomationProperties.Name="Rotation mode" />
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Button
+                            Content="Apply rotation settings"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Command="{x:Bind RotationVm.SaveAndApplyCommand}"
+                            AutomationProperties.Name="Apply rotation settings" />
+                        <Button
+                            Content="Rotate now"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{x:Bind RotationVm.AdvanceNowCommand}"
+                            IsEnabled="{x:Bind RotationVm.IsRunning, Mode=OneWay}"
+                            AutomationProperties.Name="Force rotate now" />
+                    </StackPanel>
+                    <TextBlock Style="{StaticResource CaptionText}">
+                        <Run Text="Next rotation: " />
+                        <Run Text="{x:Bind RotationVm.NextAtText, Mode=OneWay}" Foreground="{StaticResource AccentTealBrush}" />
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <!-- Intelligence / taste -->
+            <Border Style="{StaticResource PanelStyle}">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Your Taste Profile" Style="{StaticResource SectionTitleText}" />
+                    <TextBlock Text="These preferences guide intelligent recommendations." Style="{StaticResource SubtitleText}" />
+                    <TextBox Header="Preferred categories (comma-separated)" Text="{x:Bind ViewModel.PreferredCategoriesText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Preferred categories" />
+                    <TextBox Header="Preferred colors (RRGGBB hex, comma-separated)" Text="{x:Bind ViewModel.PreferredColorsText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Preferred colors" />
+                    <TextBox Header="Preferred style tags" Text="{x:Bind ViewModel.PreferredStylesText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AutomationProperties.Name="Preferred style tags" />
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <ToggleSwitch Header="Set a preferred brightness" IsOn="{x:Bind ViewModel.HasBrightnessPreference, Mode=TwoWay}" AutomationProperties.Name="Enable brightness preference" />
+                    </StackPanel>
+                    <Slider
+                        Header="Preferred brightness"
+                        Minimum="0" Maximum="100"
+                        Value="{x:Bind ViewModel.PreferredBrightnessPercent, Mode=TwoWay}"
+                        Visibility="{x:Bind conv:Converters.ToVisibility(ViewModel.HasBrightnessPreference), Mode=OneWay}"
+                        AutomationProperties.Name="Preferred brightness level" />
+                    <Button
+                        Content="Reset taste profile"
+                        Style="{StaticResource DangerButtonStyle}"
+                        Command="{x:Bind ViewModel.ResetTasteProfileCommand}"
+                        AutomationProperties.Name="Reset taste profile" />
+                </StackPanel>
+            </Border>
+
+            <!-- System -->
+            <Border Style="{StaticResource PanelStyle}">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="System" Style="{StaticResource SectionTitleText}" />
+                    <ToggleSwitch Header="Launch DeskVerse with Windows" IsOn="{x:Bind ViewModel.RunAtStartup, Mode=TwoWay}" AutomationProperties.Name="Launch at startup" />
+                    <ToggleSwitch Header="Minimize to system tray" IsOn="{x:Bind ViewModel.MinimizeToTray, Mode=TwoWay}" AutomationProperties.Name="Minimize to tray" />
+                </StackPanel>
+            </Border>
+
+            <!-- Local API -->
+            <Border Style="{StaticResource PanelStyle}">
+                <StackPanel Spacing="14">
+                    <TextBlock Text="Local API" Style="{StaticResource SectionTitleText}" />
+                    <TextBlock Text="{x:Bind ViewModel.ApiBaseUrl, Mode=OneWay}" Style="{StaticResource SubtitleText}" />
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBox
+                            Header="Bearer token"
+                            Text="{x:Bind ViewModel.ApiTokenDisplay, Mode=OneWay}"
+                            IsReadOnly="True"
+                            MinWidth="240"
+                            AutomationProperties.Name="API bearer token" />
+                        <Button
+                            Content="{x:Bind conv:Converters.EyeGlyph(ViewModel.TokenRevealed), Mode=OneWay}"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{x:Bind ViewModel.ToggleTokenRevealCommand}"
+                            VerticalAlignment="Bottom"
+                            AutomationProperties.Name="Toggle token visibility" />
+                        <Button
+                            Content="Copy"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{x:Bind ViewModel.CopyTokenCommand}"
+                            VerticalAlignment="Bottom"
+                            AutomationProperties.Name="Copy token to clipboard" />
+                        <Button
+                            Content="Rotate token"
+                            Style="{StaticResource DangerButtonStyle}"
+                            Command="{x:Bind ViewModel.RotateTokenCommand}"
+                            VerticalAlignment="Bottom"
+                            AutomationProperties.Name="Generate a new API token" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Save -->
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button
+                    Content="Save settings"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Command="{x:Bind ViewModel.SaveCommand}"
+                    AutomationProperties.Name="Save all settings" />
+                <ProgressRing
+                    Width="18" Height="18"
+                    IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}"
+                    Visibility="{x:Bind conv:Converters.ToVisibility(ViewModel.IsBusy), Mode=OneWay}" />
+            </StackPanel>
+
+        </StackPanel>
+    </ScrollViewer>
+</Page>

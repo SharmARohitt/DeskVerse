@@ -40,5 +40,8 @@ public sealed class RecommendationOptions
 
     public double LargeFileResourceCost { get; set; } = 0.3;
 
+    /// <summary>Fraction of the ranked list where exploration (random shuffle) begins. 0.8 = top 80% are stable, bottom 20% shuffled.</summary>
+    public double ExplorationStartFraction { get; set; } = 0.8;
+
     public static RecommendationOptions Default { get; } = new();
 }

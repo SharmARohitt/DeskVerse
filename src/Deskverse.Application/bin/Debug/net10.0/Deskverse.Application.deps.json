@@ -198,7 +198,10 @@
       "Deskverse.Providers/0.1.0": {
         "dependencies": {
           "Deskverse.Core": "0.1.0",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.12"
+          "Deskverse.Security": "0.1.0",
+          "Microsoft.Extensions.Http": "10.0.12",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Options": "10.0.12"
         },
         "runtime": {
           "Deskverse.Providers.dll": {

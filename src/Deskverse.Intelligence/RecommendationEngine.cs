@@ -106,7 +106,32 @@ public sealed class RecommendationEngine
             }
         }
 
-        return recommendations.OrderByDescending(r => r.Score).ToList();
+        // Sort descending by score.
+        recommendations.Sort((a, b) => b.Score.CompareTo(a.Score));
+
+        // 80/20 exploration: the bottom 20% of the list gets a random shuffle
+        // so the same top-10 wallpapers don't dominate every recommendation call.
+        var explorationStart = Math.Max(1, (int)(recommendations.Count * _options.ExplorationStartFraction));
+        if (explorationStart < recommendations.Count)
+        {
+            var explorationSlice = recommendations.GetRange(explorationStart, recommendations.Count - explorationStart);
+            Shuffle(explorationSlice);
+            for (var i = explorationStart; i < recommendations.Count; i++)
+            {
+                recommendations[i] = explorationSlice[i - explorationStart];
+            }
+        }
+
+        return recommendations;
+    }
+
+    private static void Shuffle<T>(List<T> list)
+    {
+        for (var i = list.Count - 1; i > 0; i--)
+        {
+            var j = Random.Shared.Next(i + 1);
+            (list[i], list[j]) = (list[j], list[i]);
+        }
     }
 
     private RecommendationFactor ScorePreferenceMatch(Wallpaper wallpaper, UserPreferences preferences)

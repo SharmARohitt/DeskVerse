@@ -59,7 +59,8 @@
       },
       "Deskverse.Providers/0.1.0": {
         "dependencies": {
-          "Deskverse.Core": "0.1.0"
+          "Deskverse.Core": "0.1.0",
+          "Deskverse.Security": "0.1.0"
         },
         "runtime": {
           "Deskverse.Providers.dll": {

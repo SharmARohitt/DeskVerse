@@ -59,6 +59,13 @@ public partial class StorageViewModel : ViewModelBase, IRecipient<LibraryChanged
     [ObservableProperty]
     private Microsoft.UI.Xaml.Controls.InfoBarSeverity _healthSeverity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Informational;
 
+    /// <summary>Non-null when usage crosses 70% — shown as an inline banner without spamming notifications.</summary>
+    [ObservableProperty]
+    private string? _thresholdWarning;
+
+    [ObservableProperty]
+    private bool _hasThresholdWarning;
+
     public StorageViewModel(
         StorageService storage,
         NotificationService notifications,
@@ -130,6 +137,32 @@ public partial class StorageViewModel : ViewModelBase, IRecipient<LibraryChanged
             StorageHealth.Critical => Microsoft.UI.Xaml.Controls.InfoBarSeverity.Error,
             _ => Microsoft.UI.Xaml.Controls.InfoBarSeverity.Informational,
         };
+
+        // Threshold-driven inline warnings (shown once per load, not as repeated toasts).
+        if (status.LimitBytes > 0)
+        {
+            var pct = status.LimitBytes > 0 ? (double)status.UsedBytes / status.LimitBytes : 0;
+            if (pct >= 0.95)
+            {
+                ThresholdWarning = $"Cache is full ({pct:P0}). New downloads are blocked until space is freed.";
+                HasThresholdWarning = true;
+            }
+            else if (pct >= 0.85)
+            {
+                ThresholdWarning = $"Cache is {pct:P0} full. Consider running cleanup soon.";
+                HasThresholdWarning = true;
+            }
+            else if (pct >= 0.70)
+            {
+                ThresholdWarning = $"Cache is {pct:P0} full.";
+                HasThresholdWarning = true;
+            }
+            else
+            {
+                ThresholdWarning = null;
+                HasThresholdWarning = false;
+            }
+        }
     }
 
     [RelayCommand]

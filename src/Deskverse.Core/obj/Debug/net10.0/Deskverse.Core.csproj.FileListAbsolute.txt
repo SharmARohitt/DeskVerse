@@ -9,3 +9,4 @@ E:\HackQuest\DeskVerse\src\Deskverse.Core\obj\Debug\net10.0\Deskverse.Core.dll
 E:\HackQuest\DeskVerse\src\Deskverse.Core\obj\Debug\net10.0\refint\Deskverse.Core.dll
 E:\HackQuest\DeskVerse\src\Deskverse.Core\obj\Debug\net10.0\Deskverse.Core.pdb
 E:\HackQuest\DeskVerse\src\Deskverse.Core\obj\Debug\net10.0\ref\Deskverse.Core.dll
+e:\HackQuest\DeskVerse\src\Deskverse.Core\obj\Debug\net10.0\Deskverse.Core.sourcelink.json

@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\src\Deskverse.Core\Deskverse.Core.csproj" />
     <ProjectReference Include="..\..\src\Deskverse.Security\Deskverse.Security.csproj" />
     <ProjectReference Include="..\..\src\Deskverse.Storage\Deskverse.Storage.csproj" />
+    <ProjectReference Include="..\..\src\Deskverse.Intelligence\Deskverse.Intelligence.csproj" />
     <ProjectReference Include="..\..\src\Deskverse.Infrastructure\Deskverse.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\Deskverse.Application\Deskverse.Application.csproj" />
     <ProjectReference Include="..\..\src\Deskverse.Api\Deskverse.Api.csproj" />

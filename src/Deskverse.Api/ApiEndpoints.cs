@@ -29,6 +29,7 @@ public static class ApiEndpoints
         MapStorage(api);
         MapPreferences(api);
         MapCollections(api);
+        MapRotation(api);
         MapHealth(api);
     }
 
@@ -422,6 +423,32 @@ public static class ApiEndpoints
             Results.Json(SystemHealthDto.From(await health.GetHealthAsync(ct).ConfigureAwait(false))));
     }
 
+    private static void MapRotation(RouteGroupBuilder api)
+    {
+        api.MapGet("/rotation/status", (RotationScheduler scheduler) =>
+            Results.Json(new RotationStatusDto(
+                scheduler.IsRunning,
+                scheduler.NextAt == DateTimeOffset.MaxValue ? null : scheduler.NextAt)));
+
+        api.MapPost("/rotation/start", async (RotationScheduler scheduler, CancellationToken ct) =>
+        {
+            await scheduler.StartAsync(ct).ConfigureAwait(false);
+            return Results.Json(new SimpleResultDto(true, null));
+        });
+
+        api.MapPost("/rotation/stop", async (RotationScheduler scheduler, CancellationToken ct) =>
+        {
+            await scheduler.StopAsync().ConfigureAwait(false);
+            return Results.Json(new SimpleResultDto(true, null));
+        });
+
+        api.MapPost("/rotation/advance", async (RotationScheduler scheduler, CancellationToken ct) =>
+        {
+            await scheduler.AdvanceNowAsync(ct).ConfigureAwait(false);
+            return Results.Json(new SimpleResultDto(true, null));
+        });
+    }
+
     private static IResult ToSimpleResult(OperationResult result) =>
         result.Success
             ? Results.Json(new SimpleResultDto(true, null))
@@ -593,3 +620,5 @@ public sealed record ChangeCacheDirectoryRequestDto(string Path);
 public sealed record RenameCollectionRequestDto(string Name);
 
 public sealed record SurpriseResultDto(RecommendationDto? Recommendation, ApplyResultDto Outcome);
+
+public sealed record RotationStatusDto(bool IsRunning, DateTimeOffset? NextAt);

@@ -276,6 +276,33 @@ public partial class SettingsViewModel : ViewModelBase
         _notifications.Success("A new API token was generated. Old tokens no longer work.");
     }
 
+    [RelayCommand]
+    private async Task ResetTasteProfileAsync()
+    {
+        try
+        {
+            var prefs = await _preferences.LoadAsync().ConfigureAwait(true);
+            prefs.PreferredCategories = [];
+            prefs.PreferredColors = [];
+            prefs.PreferredStyles = [];
+            prefs.PreferredBrightness = null;
+            var result = await _preferences.SaveAsync(prefs).ConfigureAwait(true);
+            if (result.Success)
+            {
+                PreferredCategoriesText = string.Empty;
+                PreferredColorsText = string.Empty;
+                PreferredStylesText = string.Empty;
+                HasBrightnessPreference = false;
+                _notifications.Success("Taste profile reset. Recommendations will rebuild from your usage history.");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Taste profile reset failed");
+            _notifications.Error("The taste profile could not be reset.");
+        }
+    }
+
     private static string[] SplitList(string text) => text
         .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
         .Where(s => s.Length <= 40)

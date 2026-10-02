@@ -290,7 +290,10 @@
         "framework": ".NETCoreApp,Version=v10.0",
         "dependencies": {
           "Deskverse.Core": "0.1.0",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.12"
+          "Deskverse.Security": "0.1.0",
+          "Microsoft.Extensions.Http": "10.0.12",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Options": "10.0.12"
         },
         "compile": {
           "bin/placeholder/Deskverse.Providers.dll": {}
@@ -828,11 +831,11 @@
   "project": {
     "version": "0.1.0",
     "restore": {
-      "projectUniqueName": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Application\\Deskverse.Application.csproj",
+      "projectUniqueName": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Application\\Deskverse.Application.csproj",
       "projectName": "Deskverse.Application",
-      "projectPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Application\\Deskverse.Application.csproj",
+      "projectPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Application\\Deskverse.Application.csproj",
       "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-      "outputPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Application\\obj\\",
+      "outputPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Application\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -848,20 +851,20 @@
           "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {
-            "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Core\\Deskverse.Core.csproj": {
-              "projectPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Core\\Deskverse.Core.csproj"
+            "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Core\\Deskverse.Core.csproj": {
+              "projectPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Core\\Deskverse.Core.csproj"
             },
-            "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Intelligence\\Deskverse.Intelligence.csproj": {
-              "projectPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Intelligence\\Deskverse.Intelligence.csproj"
+            "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Intelligence\\Deskverse.Intelligence.csproj": {
+              "projectPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Intelligence\\Deskverse.Intelligence.csproj"
             },
-            "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Providers\\Deskverse.Providers.csproj": {
-              "projectPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Providers\\Deskverse.Providers.csproj"
+            "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Providers\\Deskverse.Providers.csproj": {
+              "projectPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Providers\\Deskverse.Providers.csproj"
             },
-            "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Security\\Deskverse.Security.csproj": {
-              "projectPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Security\\Deskverse.Security.csproj"
+            "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Security\\Deskverse.Security.csproj": {
+              "projectPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Security\\Deskverse.Security.csproj"
             },
-            "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Storage\\Deskverse.Storage.csproj": {
-              "projectPath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.Storage\\Deskverse.Storage.csproj"
+            "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Storage\\Deskverse.Storage.csproj": {
+              "projectPath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.Storage\\Deskverse.Storage.csproj"
             }
           }
         }

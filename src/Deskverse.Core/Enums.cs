@@ -88,6 +88,20 @@ public enum EngineState
     Failed = 4,
 }
 
+public enum RotationMode
+{
+    /// <summary>Pick a random wallpaper each interval.</summary>
+    Random = 0,
+    /// <summary>Walk through the library in a fixed order.</summary>
+    Sequential = 1,
+    /// <summary>Rotate only wallpapers marked as favorites.</summary>
+    FavoritesOnly = 2,
+    /// <summary>Use the recommendation engine to pick next.</summary>
+    Recommended = 3,
+    /// <summary>Rotate wallpapers in a specific collection.</summary>
+    Collection = 4,
+}
+
 public enum ImportRejectReason
 {
     None = 0,

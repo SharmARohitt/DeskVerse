@@ -16,8 +16,7 @@ using Microsoft.Extensions.Logging;
 /// Studio: metadata curation and visual analysis for a selected wallpaper,
 /// including per-display apply and re-analysis with Windows imaging.
 /// </summary>
-public partial class StudioViewModel : ViewModelBase, IRecipient<WallpaperSelectedMessage>, IRecipient<WallpaperUpdatedMessage>
-{
+public partial class StudioViewModel : ViewModelBase, IRecipient<WallpaperSelectedMessage>, IRecipient<WallpaperUpdatedMessage>, IRecipient<DisplayTopologyChangedMessage>{
     public const string AllDisplaysLabel = "All displays";
 
     private readonly WallpaperActions _actions;
@@ -143,6 +142,12 @@ public partial class StudioViewModel : ViewModelBase, IRecipient<WallpaperSelect
         {
             _ = RefreshFromStoreAsync();
         }
+    }
+
+    public void Receive(DisplayTopologyChangedMessage message)
+    {
+        // Refresh display list so per-monitor targeting stays accurate.
+        _ = LoadAsync();
     }
 
     private async Task RefreshFromStoreAsync()

@@ -1,6 +1,7 @@
 namespace Deskverse.App.Messaging;
 
 using CommunityToolkit.Mvvm.Messaging;
+using Deskverse.App.ViewModels;
 
 /// <summary>Raised when a single wallpaper's flags or metadata changed.</summary>
 public sealed record WallpaperUpdatedMessage(Guid WallpaperId);
@@ -11,5 +12,8 @@ public sealed record LibraryChangedMessage;
 /// <summary>Raised after a wallpaper was applied, stopped, or restored.</summary>
 public sealed record EngineStateChangedMessage;
 
-/// <summary>Raised when the user picks a wallpaper to inspect or edit in Studio.</summary>
+/// <summary>Raised when a wallpaper is picked to inspect/edit in Studio.</summary>
 public sealed record WallpaperSelectedMessage(WallpaperItemViewModel Item);
+
+/// <summary>Raised when the display topology changes (monitor connect/disconnect/resize).</summary>
+public sealed record DisplayTopologyChangedMessage;

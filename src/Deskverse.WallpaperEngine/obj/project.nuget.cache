@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ia/WCIlhTcg=",
+  "dgSpecHash": "aZP1O/BUFiY=",
   "success": true,
-  "projectFilePath": "E:\\HackQuest\\DeskVerse\\src\\Deskverse.WallpaperEngine\\Deskverse.WallpaperEngine.csproj",
+  "projectFilePath": "e:\\HackQuest\\DeskVerse\\src\\Deskverse.WallpaperEngine\\Deskverse.WallpaperEngine.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\10.0.12\\microsoft.extensions.dependencyinjection.abstractions.10.0.12.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\10.0.12\\microsoft.extensions.logging.abstractions.10.0.12.nupkg.sha512",
