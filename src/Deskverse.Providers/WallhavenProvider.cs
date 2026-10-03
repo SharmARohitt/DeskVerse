@@ -76,7 +76,7 @@ public sealed class WallhavenProvider : IWallpaperProvider
         }
 
         var purity = BuildPurity();
-        var url = $"{BaseUrl}/search?q={Uri.EscapeDataString(q)}&purity={purity}&sorting={_options.DefaultSort}&atleast={ResolutionParam(query)}&page=1";
+        var url = $"{BaseUrl}/search?q={Uri.EscapeDataString(q)}&purity={purity}&sorting={Uri.EscapeDataString(_options.DefaultSort)}&atleast={ResolutionParam(query)}&page=1";
 
         return await FetchWallpapersAsync(url, cancellationToken).ConfigureAwait(false);
     }
@@ -101,6 +101,13 @@ public sealed class WallhavenProvider : IWallpaperProvider
         if (string.IsNullOrWhiteSpace(sourceId))
         {
             return ProviderResult<ProviderWallpaper>.Fail("sourceId is required.");
+        }
+
+        // The id is interpolated into the request path, so it must stay a single
+        // path segment: no traversal, query, or fragment injection.
+        if (!IsValidSourceId(sourceId))
+        {
+            return ProviderResult<ProviderWallpaper>.Fail("sourceId has an unexpected format.");
         }
 
         var url = $"{BaseUrl}/w/{sourceId}";
@@ -259,6 +266,11 @@ public sealed class WallhavenProvider : IWallpaperProvider
             DominantColor: NormalizeHex(w.Colors?.FirstOrDefault()),
             Brightness: null);
     }
+
+    /// <summary>Wallhaven ids are six alphanumeric characters used as a single path segment.</summary>
+    private static bool IsValidSourceId(string sourceId) =>
+        sourceId.Length is > 0 and <= 16
+        && sourceId.All(char.IsAsciiLetterOrDigit);
 
     private static string? NormalizeHex(string? color)
     {
