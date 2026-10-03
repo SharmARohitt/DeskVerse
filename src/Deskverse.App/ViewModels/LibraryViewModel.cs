@@ -28,30 +28,39 @@ public partial class LibraryViewModel : ViewModelBase, IRecipient<LibraryChanged
     private int _totalCount;
 
     [ObservableProperty]
+
     private bool _isBusy;
 
     [ObservableProperty]
-    private string _searchText = string.Empty;
+
+    private string _searchText= string.Empty;
 
     [ObservableProperty]
-    private string _kindFilter = "All";
+
+    private string _kindFilter= "All";
 
     [ObservableProperty]
+
     private bool _favoritesOnly;
 
     [ObservableProperty]
+
     private bool _pinnedOnly;
 
     [ObservableProperty]
+
     private bool _cachedOnly;
 
     [ObservableProperty]
-    private string _sortLabel = "Newest first";
+
+    private string _sortLabel= "Newest first";
 
     [ObservableProperty]
-    private string _summaryText = "Your library is empty. Import wallpapers to begin.";
+
+    private string _summaryText= "Your library is empty. Import wallpapers to begin.";
 
     [ObservableProperty]
+
     private bool _canLoadMore;
 
     public LibraryViewModel(
@@ -66,7 +75,7 @@ public partial class LibraryViewModel : ViewModelBase, IRecipient<LibraryChanged
         _thumbnails = thumbnails;
         _notifications = notifications;
         _logger = logger;
-        WeakReferenceMessenger.Default.Register(this);
+        WeakReferenceMessenger.Default.RegisterAll(this);
     }
 
     public ObservableCollection<WallpaperItemViewModel> Items { get; } = [];

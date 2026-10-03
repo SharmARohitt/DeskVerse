@@ -31,46 +31,60 @@ public partial class StudioViewModel : ViewModelBase, IRecipient<WallpaperSelect
     private IReadOnlyList<(string Label, string? DeviceName)> _displayChoices = [];
 
     [ObservableProperty]
+
     private bool _isBusy;
 
     [ObservableProperty]
+
     private WallpaperItemViewModel? _wallpaper;
 
     [ObservableProperty]
-    private string _title = string.Empty;
+
+    private string _title= string.Empty;
 
     [ObservableProperty]
-    private string _description = string.Empty;
+
+    private string _description= string.Empty;
 
     [ObservableProperty]
-    private string _categoriesText = string.Empty;
+
+    private string _categoriesText= string.Empty;
 
     [ObservableProperty]
-    private string _analysisSummary = "No wallpaper selected. Pick one from My Wallpapers to curate it here.";
+
+    private string _analysisSummary= "No wallpaper selected. Pick one from My Wallpapers to curate it here.";
 
     [ObservableProperty]
-    private string _brightnessText = "\u2014";
+
+    private string _brightnessText= "\u2014";
 
     [ObservableProperty]
+
     private double _brightnessPercent;
 
     [ObservableProperty]
-    private string _densityText = "\u2014";
+
+    private string _densityText= "\u2014";
 
     [ObservableProperty]
+
     private double _densityPercent;
 
     [ObservableProperty]
-    private string _dimensionsText = "\u2014";
+
+    private string _dimensionsText= "\u2014";
 
     [ObservableProperty]
-    private string _dominantColorHex = "#22262f";
+
+    private string _dominantColorHex= "#22262f";
 
     [ObservableProperty]
+
     private bool _hasDominantColor;
 
     [ObservableProperty]
-    private string _selectedDisplayLabel = AllDisplaysLabel;
+
+    private string _selectedDisplayLabel= AllDisplaysLabel;
 
     public StudioViewModel(
         WallpaperActions actions,
@@ -90,7 +104,7 @@ public partial class StudioViewModel : ViewModelBase, IRecipient<WallpaperSelect
         _cacheManager = cacheManager;
         _notifications = notifications;
         _logger = logger;
-        WeakReferenceMessenger.Default.Register(this);
+        WeakReferenceMessenger.Default.RegisterAll(this);
         DisplayLabels = new ObservableCollection<string>(BuildDisplayLabels());
     }
 
@@ -122,7 +136,7 @@ public partial class StudioViewModel : ViewModelBase, IRecipient<WallpaperSelect
     private string[] BuildDisplayLabels()
     {
         _displayChoices = new[] { (AllDisplaysLabel, (string?)null) }
-            .Concat(_displays.GetDisplays().Select(d => (Label: DescribeDisplay(d), DeviceName: d.DeviceName)))
+            .Concat(_displays.GetDisplays().Select(d => (Label: DescribeDisplay(d), DeviceName: (string?)d.DeviceName)))
             .ToArray();
         return _displayChoices.Select(c => c.Label).ToArray();
     }

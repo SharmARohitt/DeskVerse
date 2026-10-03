@@ -14,25 +14,30 @@ public partial class MainViewModel : ViewModelBase, IRecipient<WallpaperSelected
     private readonly NotificationService _notifications;
 
     [ObservableProperty]
+
     private bool _isReady;
 
     [ObservableProperty]
-    private string _statusMessage = "Preparing your library\u2026";
+
+    private string _statusMessage= "Preparing your library\u2026";
 
     [ObservableProperty]
-    private string _infoMessage = string.Empty;
+
+    private string _infoMessage= string.Empty;
 
     [ObservableProperty]
+
     private bool _isInfoOpen;
 
     [ObservableProperty]
-    private Microsoft.UI.Xaml.Controls.InfoBarSeverity _infoSeverity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Informational;
+
+    private Microsoft.UI.Xaml.Controls.InfoBarSeverity _infoSeverity= Microsoft.UI.Xaml.Controls.InfoBarSeverity.Informational;
 
     public MainViewModel(NotificationService notifications)
     {
         _notifications = notifications;
         _notifications.Raised += (_, notification) => RunOnUi(() => Show(notification));
-        WeakReferenceMessenger.Default.Register(this);
+        WeakReferenceMessenger.Default.RegisterAll(this);
     }
 
     public WallpaperItemViewModel? SelectedForStudio { get; private set; }

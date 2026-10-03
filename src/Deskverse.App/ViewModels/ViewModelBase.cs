@@ -21,7 +21,7 @@ public abstract class ViewModelBase : ObservableObject
     {
         if (Dispatcher is { HasThreadAccess: false } dispatcher)
         {
-            dispatcher.TryEnqueue(action);
+            dispatcher.TryEnqueue(new DispatcherQueueHandler(action));
         }
         else
         {
@@ -34,7 +34,7 @@ public abstract class ViewModelBase : ObservableObject
         if (Dispatcher is { HasThreadAccess: false } dispatcher)
         {
             var completion = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
-            dispatcher.TryEnqueue(() =>
+            dispatcher.TryEnqueue(new DispatcherQueueHandler(() =>
             {
                 try
                 {
@@ -44,7 +44,7 @@ public abstract class ViewModelBase : ObservableObject
                 {
                     completion.TrySetException(ex);
                 }
-            });
+            }));
             return await completion.Task.ConfigureAwait(true);
         }
 

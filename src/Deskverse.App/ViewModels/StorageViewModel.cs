@@ -21,49 +21,63 @@ public partial class StorageViewModel : ViewModelBase, IRecipient<LibraryChanged
     private readonly ILogger<StorageViewModel> _logger;
 
     [ObservableProperty]
+
     private bool _isBusy;
 
     [ObservableProperty]
-    private string _cacheDirectory = string.Empty;
+
+    private string _cacheDirectory= string.Empty;
 
     [ObservableProperty]
-    private string _limitText = "\u2014";
+
+    private string _limitText= "\u2014";
 
     [ObservableProperty]
-    private string _usedText = "\u2014";
+
+    private string _usedText= "\u2014";
 
     [ObservableProperty]
+
     private double _usedPercent;
 
     [ObservableProperty]
-    private string _cachedCountText = "\u2014";
+
+    private string _cachedCountText= "\u2014";
 
     [ObservableProperty]
-    private string _activeText = "\u2014";
+
+    private string _activeText= "\u2014";
 
     [ObservableProperty]
-    private string _pinnedText = "\u2014";
+
+    private string _pinnedText= "\u2014";
 
     [ObservableProperty]
-    private string _thumbnailText = "\u2014";
+
+    private string _thumbnailText= "\u2014";
 
     [ObservableProperty]
-    private string _diskText = "\u2014";
+
+    private string _diskText= "\u2014";
 
     [ObservableProperty]
-    private string _healthText = "Unknown";
+
+    private string _healthText= "Unknown";
 
     [ObservableProperty]
-    private string _healthMessage = "Waiting for the first storage scan\u2026";
+
+    private string _healthMessage= "Waiting for the first storage scan\u2026";
 
     [ObservableProperty]
-    private Microsoft.UI.Xaml.Controls.InfoBarSeverity _healthSeverity = Microsoft.UI.Xaml.Controls.InfoBarSeverity.Informational;
+
+    private Microsoft.UI.Xaml.Controls.InfoBarSeverity _healthSeverity= Microsoft.UI.Xaml.Controls.InfoBarSeverity.Informational;
 
     /// <summary>Non-null when usage crosses 70% — shown as an inline banner without spamming notifications.</summary>
     [ObservableProperty]
     private string? _thresholdWarning;
 
     [ObservableProperty]
+
     private bool _hasThresholdWarning;
 
     public StorageViewModel(
@@ -76,7 +90,7 @@ public partial class StorageViewModel : ViewModelBase, IRecipient<LibraryChanged
         _notifications = notifications;
         _pickers = pickers;
         _logger = logger;
-        WeakReferenceMessenger.Default.Register(this);
+        WeakReferenceMessenger.Default.RegisterAll(this);
     }
 
     [RelayCommand]

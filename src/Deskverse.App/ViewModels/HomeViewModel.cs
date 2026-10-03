@@ -8,6 +8,7 @@ using Deskverse.App.Messaging;
 using Deskverse.App.Services;
 using Deskverse.Application;
 using Deskverse.Core.Abstractions;
+using Deskverse.Core;
 using Deskverse.Core.Models;
 using Microsoft.Extensions.Logging;
 
@@ -25,22 +26,28 @@ public partial class HomeViewModel : ViewModelBase, IRecipient<LibraryChangedMes
     private readonly ILogger<HomeViewModel> _logger;
 
     [ObservableProperty]
+
     private bool _isBusy;
 
     [ObservableProperty]
-    private string _engineStateText = "Idle";
+
+    private string _engineStateText= "Idle";
 
     [ObservableProperty]
-    private string _engineDetailText = "No wallpaper is currently active.";
+
+    private string _engineDetailText= "No wallpaper is currently active.";
 
     [ObservableProperty]
+
     private WallpaperItemViewModel? _activeWallpaper;
 
     [ObservableProperty]
-    private string _greetingText = "Welcome to DeskVerse";
+
+    private string _greetingText= "Welcome to DeskVerse";
 
     [ObservableProperty]
-    private string _librarySummaryText = string.Empty;
+
+    private string _librarySummaryText= string.Empty;
 
     public HomeViewModel(
         RecommendationService recommendations,
@@ -56,7 +63,7 @@ public partial class HomeViewModel : ViewModelBase, IRecipient<LibraryChangedMes
         _thumbnails = thumbnails;
         _notifications = notifications;
         _logger = logger;
-        WeakReferenceMessenger.Default.Register(this);
+        WeakReferenceMessenger.Default.RegisterAll(this);
         UpdateGreeting();
     }
 
@@ -99,6 +106,7 @@ public partial class HomeViewModel : ViewModelBase, IRecipient<LibraryChangedMes
                 }
 
                 OnPropertyChanged(nameof(HasRecommendations));
+                return true;
             }).ConfigureAwait(true);
 
             foreach (var item in recommendationItems)

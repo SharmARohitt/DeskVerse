@@ -24,19 +24,24 @@ public partial class CollectionsViewModel : ViewModelBase, IRecipient<LibraryCha
     private readonly ILogger<CollectionsViewModel> _logger;
 
     [ObservableProperty]
+
     private bool _isBusy;
 
     [ObservableProperty]
+
     private CollectionTileViewModel? _selectedCollection;
 
     [ObservableProperty]
-    private string _newCollectionName = string.Empty;
+
+    private string _newCollectionName= string.Empty;
 
     [ObservableProperty]
-    private string _selectedDetailTitle = "Select a collection";
+
+    private string _selectedDetailTitle= "Select a collection";
 
     [ObservableProperty]
-    private string _selectedDetailSubtitle = "Pick one of your collections to see its wallpapers.";
+
+    private string _selectedDetailSubtitle= "Pick one of your collections to see its wallpapers.";
 
     public CollectionsViewModel(
         CollectionsService collections,
@@ -50,7 +55,7 @@ public partial class CollectionsViewModel : ViewModelBase, IRecipient<LibraryCha
         _thumbnails = thumbnails;
         _notifications = notifications;
         _logger = logger;
-        WeakReferenceMessenger.Default.Register(this);
+        WeakReferenceMessenger.Default.RegisterAll(this);
     }
 
     public ObservableCollection<CollectionTileViewModel> Collections { get; } = [];
@@ -141,7 +146,7 @@ public partial class CollectionsViewModel : ViewModelBase, IRecipient<LibraryCha
     }
 
     [RelayCommand]
-    private async Task DeleteAsync(CollectionTileViewModel tile)
+    public async Task DeleteAsync(CollectionTileViewModel tile)
     {
         if (tile.IsSystem)
         {
@@ -301,9 +306,11 @@ public partial class CollectionTileViewModel : ObservableObject
     private readonly CollectionsViewModel _owner;
 
     [ObservableProperty]
+
     private string _name;
 
     [ObservableProperty]
+
     private int _count;
 
     public CollectionTileViewModel(WallpaperCollection model, CollectionsViewModel owner)
