@@ -2,6 +2,7 @@ namespace Deskverse.Infrastructure.Persistence;
 
 using Deskverse.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 /// <summary>
 /// The SQLite data model. Cache paths are relative strings, hashes are plain hex,
@@ -25,6 +26,15 @@ public sealed class DeskverseDbContext : DbContext
     public DbSet<WallpaperCollection> Collections => Set<WallpaperCollection>();
 
     public DbSet<CollectionItem> CollectionItems => Set<CollectionItem>();
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        // SQLite can sort TEXT, but it refuses ORDER BY on a DateTimeOffset column:
+        // the stored text carries its offset, so two rows holding the same instant
+        // written at different offsets would not compare as equal. Persisting every
+        // instant as a UTC DateTime keeps ordering both translatable and chronological.
+        configurationBuilder.Properties<DateTimeOffset>().HaveConversion<UtcDateTimeConverter>();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
