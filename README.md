@@ -1,73 +1,146 @@
 # DeskVerse
 
-A Windows desktop wallpaper manager built with WinUI 3 (.NET 10). It aims to be a smart, privacy-first hub for discovering, curating, and rotating wallpapers — with AI-powered recommendations and full multi-monitor support.
+A Windows-native wallpaper and desktop experience engine. Discover, import, curate, and
+rotate static and video wallpapers — with an on-device recommendation engine, a hardened
+security layer around every file and network path, and a token-authenticated local API.
+
+Built with WinUI 3 on .NET 10. Nothing leaves the device except the search terms you type
+into a catalog.
 
 ---
 
-## Aim
+## Features
 
-DeskVerse wants to be the one app you need for desktop wallpapers:
-
-- Browse and safely download wallpapers from open online catalogs.
-- Import your own images and videos from local storage.
-- Let an on-device recommendation engine learn your taste over time.
-- Apply wallpapers per-monitor, rotate on a schedule, and manage a managed cache with configurable storage limits.
-- Expose a local API so other tools and scripts can interact with the wallpaper engine.
-
----
-
-## Current Capabilities (what actually works today)
-
-| Area | Status |
+| Area | What it does |
 |---|---|
-| **Library** | Import local images/videos, search, sort, filter by kind/favorites/pinned/cached, paginate, delete |
-| **Wallpaper application** | Apply via both Win32 `SystemParametersInfo` and the `IDesktopWallpaper` COM API; per-monitor support scaffolded |
-| **Video wallpapers** | Video rendered into the desktop `WorkerW` window via a WinUI `MediaPlayerElement` host |
-| **Engine controls** | Apply, Pause, Resume, Stop, Restore previous — wired end-to-end in the UI |
-| **Discover page** | Provider aggregation with search and trending; a `MockWallpaperProvider` is included; no real online provider yet |
-| **Studio page** | Select a wallpaper, edit metadata (title, description, categories), trigger visual re-analysis, choose display target |
-| **Recommendation engine** | Scores wallpapers by preference match, usage history, and visual features; explainable factors surfaced in the UI |
-| **Duplicate detection** | Exact-hash and visual-similarity duplicate finder |
-| **Cache / storage management** | Configurable cache path, size limit, health reporting, LRU-style cleanup policy |
-| **Security layer** | File-signature validation, MIME/extension checks, URL allowlist policy, safe network download service |
-| **Local REST API** | Embedded ASP.NET Core host with token authentication; endpoint scaffolding present |
-| **Settings** | Cache path, storage limit, rotation interval, placement mode, per-display preferences |
-| **Persistence** | SQLite via EF Core; initial migration present |
-| **Notifications** | In-app toast/snackbar notification service |
+| **Discover** | Aggregates Wallhaven.cc, the local library, and a deterministic mock catalog concurrently. One slow provider never blocks the others; per-provider failures surface in the UI instead of failing the search. |
+| **Library** | Import local images and videos, or download from a catalog. Search, filter by kind/category/favorites/pinned/cached/imported, sort six ways, paginate. |
+| **Static wallpapers** | Applied through `IDesktopWallpaper` COM with a `SystemParametersInfo` fallback. The wallpaper active before the first DeskVerse apply is remembered and restorable. |
+| **Video wallpapers** | `MediaPlayerElement` hosted in a window parented into the desktop `WorkerW` layer, so playback sits under the icons and survives `Win+D`. |
+| **Engine controls** | Apply, pause, resume, stop, restore previous — wired end-to-end in the UI and the API. |
+| **Rotation** | Background scheduler with sequential / random / favorites-only / recommended / collection modes and a configurable interval. |
+| **Recommendations** | Scores the library on preference match, learned category affinity from usage history, visual features (dominant color, brightness, density), and freshness. Every score ships with its weighted factors and a plain-language explanation. |
+| **Surprise me** | One call picks the top recommendation and applies it. |
+| **Duplicates** | Exact content-hash groups plus visual-similarity candidates for review. |
+| **Storage** | Configurable cache directory and size limit, live health reporting, LRU cleanup that never evicts the active or a pinned wallpaper, and crash reconciliation of staged files. |
+| **Local API** | 40 REST endpoints on `127.0.0.1`, OS-assigned port, bearer token. See [docs/API.md](docs/API.md). |
+| **First run** | Onboarding dialog that picks the cache location and storage limit before anything is written. |
+| **Multi-monitor** | Display topology monitoring; a changed layout raises a message that re-lays out per-display targets. Video wallpapers target a specific display. |
 
 ---
 
-## What Is Partial or Missing
+## Getting started
 
-- **Real online provider** — only a mock provider exists; no live catalog (Unsplash, Wallhaven, etc.) is connected.
-- **Collections view** — `CollectionsViewModel` and `CollectionsService` are written but no `CollectionsView.xaml` exists in the Views folder.
-- **Wallpaper rotation / scheduler** — settings fields for rotation interval are present but no background scheduler is wired up.
-- **Local API endpoints** — `ApiEndpoints.cs` is scaffolded; actual route handlers need filling out.
-- **First-run / onboarding flow** — `IsFirstRunComplete` is tracked in the preferences store but no onboarding UI exists.
-- **Per-monitor independent wallpapers** — the COM API supports it and display selection is in Studio, but full per-monitor rotation is not implemented.
-- **Animated/GIF wallpapers** — `WallpaperKind` includes `AnimatedGif` but no playback path is implemented.
-- **Tests** — no test projects are present.
+### Prerequisites
+
+- Windows 10 19041 or later, x64 (or ARM64).
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
+- Visual Studio 2022 17.10+ with the *Windows application development* workload, or any
+  editor — the app is unpackaged, so no deployment tooling is required to run it.
+
+### Build and run
+
+```powershell
+dotnet build DeskVerse.slnx
+dotnet run --project src/Deskverse.App
+```
+
+The executable lands in
+`src/Deskverse.App/bin/x64/Debug/net10.0-windows10.0.19041.0/win-x64/Deskverse.App.exe`
+and can be launched directly.
+
+### Test
+
+```powershell
+dotnet test DeskVerse.slnx
+```
+
+155 tests across three projects: `Deskverse.UnitTests` (pure logic),
+`Deskverse.SecurityTests` (path, URL, and file-validation attacks), and
+`Deskverse.IntegrationTests` (real SQLite, real migrations, the local API over HTTP).
 
 ---
 
-## Tech Stack
+## Project layout
+
+```
+src/
+  Deskverse.Core            entities, enums, query models, all shared interfaces
+  Deskverse.Infrastructure  EF Core + SQLite, repositories, Win32 environment, migrations
+  Deskverse.Security        path safety, URL policy, safe downloads, file validation
+  Deskverse.Storage         managed cache: accounting, LRU eviction, reconciliation
+  Deskverse.Intelligence    recommendation scoring, usage profiling, duplicate detection
+  Deskverse.Providers       Wallhaven, mock catalog, local library, aggregation
+  Deskverse.WallpaperEngine static + video engines, WorkerW host, resource governor
+  Deskverse.Application     use-case services that compose everything above
+  Deskverse.Api             embedded Kestrel host, auth middleware, 40 endpoints
+  Deskverse.App             WinUI 3 shell, view models, views, Windows imaging
+tests/
+  Deskverse.UnitTests  Deskverse.SecurityTests  Deskverse.IntegrationTests
+```
+
+Dependencies point one way: `App → Api → Application → {Providers, Intelligence, Storage,
+WallpaperEngine, Infrastructure} → Security → Core`. `Core` references nothing.
+
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the runtime design,
+[docs/SECURITY.md](docs/SECURITY.md) for the threat model, and
+[docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for conventions and the migration workflow.
+
+---
+
+## Tech stack
 
 | Layer | Technology |
 |---|---|
-| UI framework | WinUI 3 (Windows App SDK), XAML |
-| Language / runtime | C# 13, .NET 10 |
-| MVVM | CommunityToolkit.Mvvm |
-| Database | SQLite + Entity Framework Core |
-| Imaging | Windows Imaging Component (WIC) via P/Invoke |
-| Video playback | `Windows.Media.Playback.MediaPlayer` embedded in desktop `WorkerW` |
-| Local API | ASP.NET Core (minimal API, embedded host) |
-| DI | `Microsoft.Extensions.DependencyInjection` |
-| Architecture | Clean-ish layered: Core → Infrastructure / WallpaperEngine / Storage / Security / Intelligence / Providers → Application → App |
+| UI | WinUI 3 / Windows App SDK 2.5.1, XAML, CommunityToolkit.Mvvm |
+| Runtime | .NET 10, C# `latest`, nullable enabled, unpackaged self-contained |
+| Data | SQLite via EF Core 10, migrations applied at startup |
+| Imaging | Windows Imaging Component (dominant color, brightness, density, thumbnails) |
+| Video | `Windows.Media.Playback.MediaPlayer` in a `WorkerW`-parented window |
+| API | ASP.NET Core minimal API in a `CreateSlimBuilder` host |
+| DI | `Microsoft.Extensions.DependencyInjection`, one composition root |
+| Logging | Serilog, rolling daily files under `%LOCALAPPDATA%\DeskVerse\logs` |
 
 ---
 
-## Current Status
+## Provider keys
 
-> **~60 % complete — solid foundation, key integrations still missing.**
+DeskVerse works out of the box: **Wallhaven needs no key** for SFW content, and the Local and
+Mock providers are always available. Keys are only needed to raise rate limits or to add a
+catalog that requires authentication.
 
-The architecture is well-structured and the core loop (import → library → apply → recommend) is functional end-to-end. The main gaps are the live online provider, wallpaper rotation scheduling, the Collections view, and API endpoint handlers. The app can be run and used for basic wallpaper management today, but the "smart" and "discover" features are limited to mock/local data.
+Put them in `%LOCALAPPDATA%\DeskVerse\settings.json` (created on demand, never committed, read
+at startup and merged over the defaults):
+
+```json
+{
+  "Wallhaven": { "ApiKey": "", "Purity": "sfw", "PageSize": 24 },
+  "Unsplash":  { "AccessKey": "" },
+  "Giphy":     { "ApiKey": "" }
+}
+```
+
+Environment variables override the file: `DESKVERSE_Wallhaven__ApiKey`,
+`DESKVERSE_Unsplash__AccessKey`, and so on. `DESKVERSE_WALLHAVEN_APIKEY` is also honoured
+directly. Only the sections a provider actually implements are read — the other blocks are
+inert placeholders for when a provider is added.
+
+| Source | Free tier | Key needed? | What it unlocks |
+|---|---|---|---|
+| Wallhaven.cc | yes | **no** (SFW) | Live search + trending, already wired and verified |
+| Wallhaven API key | yes | optional | `sketchy`/`nsfw` purity, higher rate limit |
+| Wikimedia Commons | yes | no, but a `User-Agent` is required | huge CC-licensed photo/art catalog |
+| Unsplash | 50 req/hr demo | yes (`Access-Key`) | high-resolution photography |
+| Pexels / Pixabay | yes | yes (free) | stock photography, no attribution |
+| Giphy / Tenor | yes | yes (free) | animated GIF wallpapers — the one engine gap today |
+| NASA APOD | DEMO_KEY ok | yes (free) | astronomy imagery |
+
+---
+
+## Data and privacy
+
+Everything lives under `%LOCALAPPDATA%\DeskVerse`: the database, the wallpaper cache,
+thumbnails, and logs. The API token is stored DPAPI-encrypted to your Windows user and is
+never transmitted anywhere. The only outbound traffic is the provider you explicitly query,
+and Wallhaven receives only your search text and category filter — never your library,
+history, or taste profile.
