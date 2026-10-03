@@ -2,6 +2,7 @@ namespace Deskverse.App.ViewModels;
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Deskverse.App.Messaging;
 using Deskverse.App.Services;
 using Deskverse.Core;
@@ -119,6 +120,7 @@ public partial class WallpaperItemViewModel : ObservableObject
     public bool HasThumbnail => ThumbnailPath is not null;
 
     [ObservableProperty]
+
     private string? _thumbnailPath;
 
     public void ApplyModel(Wallpaper model)

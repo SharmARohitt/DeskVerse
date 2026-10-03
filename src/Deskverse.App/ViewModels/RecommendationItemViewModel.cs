@@ -13,7 +13,7 @@ public partial class RecommendationItemViewModel : ObservableObject
         Wallpaper = wallpaper;
         Factors = recommendation.Factors
             .Select(f => new RecommendationFactorViewModel(f))
-            .OrderByDescending(f => f.Contribution)
+            .OrderByDescending(f => f.ContributionPercent)
             .ToArray();
     }
 
@@ -41,6 +41,19 @@ public partial class RecommendationFactorViewModel : ObservableObject
     }
 
     public string Name { get; }
+
+    /// <summary>Short, human-readable label; the raw factor names are too long for a chip.</summary>
+    public string DisplayName => Name switch
+    {
+        "PreferenceMatch" => "Your taste",
+        "VisualCompatibility" => "Visual fit",
+        "ResolutionMatch" => "Resolution",
+        "CategoryAffinity" => "Categories",
+        "Freshness" => "Freshness",
+        "RepetitionPenalty" => "Variety",
+        "ResourceCostPenalty" => "Resource cost",
+        _ => Name,
+    };
 
     public string WeightText { get; }
 
