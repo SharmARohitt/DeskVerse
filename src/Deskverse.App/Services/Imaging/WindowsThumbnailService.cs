@@ -1,12 +1,13 @@
 namespace Deskverse.App.Services.Imaging;
 
+using Deskverse.Core;
 using Deskverse.Core.Abstractions;
 using Deskverse.Core.Entities;
 using Deskverse.Storage;
 using Microsoft.Extensions.Logging;
 using Windows.Graphics.Imaging;
-using Windows.Media.Editing;
 using Windows.Storage;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
 
 /// <summary>
@@ -108,8 +109,10 @@ public sealed class WindowsThumbnailService : IThumbnailService
         if (isVideo)
         {
             var file = await StorageFile.GetFileFromPathAsync(sourcePath).AsTask(ct).ConfigureAwait(false);
-            using var clip = await MediaClip.CreateFromFileAsync(file).AsTask(ct).ConfigureAwait(false);
-            using var poster = await clip.GetThumbnailAsync(TimeSpan.FromSeconds(1)).AsTask(ct).ConfigureAwait(false);
+            using var poster = await file
+                .GetThumbnailAsync(ThumbnailMode.VideosView, (uint)MaxEdge)
+                .AsTask(ct)
+                .ConfigureAwait(false);
             if (poster is null)
             {
                 throw new InvalidOperationException("The video has no decodable poster frame.");

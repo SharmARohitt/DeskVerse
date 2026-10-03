@@ -3,7 +3,6 @@ namespace Deskverse.App.Services.Imaging;
 using Deskverse.Core.Abstractions;
 using Microsoft.Extensions.Logging;
 using Windows.Graphics.Imaging;
-using Windows.Media.Editing;
 using Windows.Storage;
 using Windows.Storage.FileProperties;
 using Windows.Storage.Streams;
@@ -206,8 +205,10 @@ public sealed class WindowsVisualAnalyzer : IVisualAnalyzer
     private static async Task<IRandomAccessStream?> DecodeVideoFrameAsync(string path, CancellationToken ct)
     {
         var file = await StorageFile.GetFileFromPathAsync(path).AsTask(ct).ConfigureAwait(false);
-        using var clip = await MediaClip.CreateFromFileAsync(file).AsTask(ct).ConfigureAwait(false);
-        return await clip.GetThumbnailAsync(TimeSpan.FromSeconds(1)).AsTask(ct).ConfigureAwait(false);
+        return await file
+            .GetThumbnailAsync(ThumbnailMode.VideosView, (uint)AnalysisMaxEdge)
+            .AsTask(ct)
+            .ConfigureAwait(false);
     }
 
     private static async Task<(int Width, int Height)?> GetVideoDimensionsAsync(string path, CancellationToken ct)
