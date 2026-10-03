@@ -1,18 +1,21 @@
 namespace Deskverse.App.Views;
 
 using Deskverse.App.ViewModels;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Navigation;
+using Microsoft.Extensions.DependencyInjection;
 
-public sealed partial class StudioView : Page
+public sealed partial class StudioView
 {
+    public StudioViewModel ViewModel { get; } = App.Services.GetRequiredService<StudioViewModel>();
+
     public StudioView()
     {
         InitializeComponent();
-        ViewModel = App.Services.GetRequiredService<StudioViewModel>();
+        DataContext = ViewModel;
     }
 
-    public StudioViewModel ViewModel { get; }
-
-    protected override void OnNavigatedTo(NavigationEventArgs e) => base.OnNavigatedTo(e);
+    protected override void OnNavigatedTo(Microsoft.UI.Xaml.Navigation.NavigationEventArgs e)
+    {
+        base.OnNavigatedTo(e);
+        _ = ViewModel.LoadAsync();
+    }
 }

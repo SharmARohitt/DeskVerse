@@ -1,18 +1,19 @@
 namespace Deskverse.App.Views;
 
 using Deskverse.App.ViewModels;
-using Microsoft.UI.Xaml.Controls;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Navigation;
 
-public sealed partial class StorageView : Page
+public sealed partial class StorageView
 {
+    public StorageViewModel ViewModel { get; } = App.Services.GetRequiredService<StorageViewModel>();
+
     public StorageView()
     {
         InitializeComponent();
-        ViewModel = App.Services.GetRequiredService<StorageViewModel>();
+        DataContext = ViewModel;
     }
-
-    public StorageViewModel ViewModel { get; }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
@@ -20,7 +21,7 @@ public sealed partial class StorageView : Page
         _ = ViewModel.LoadAsync();
     }
 
-    private async void OnMoveCacheClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private async void OnChangeDirectoryClick(object sender, RoutedEventArgs e)
     {
         var path = await ViewModel.PickCacheDirectoryAsync().ConfigureAwait(true);
         if (!string.IsNullOrWhiteSpace(path))
