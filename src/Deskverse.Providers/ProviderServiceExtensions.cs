@@ -1,6 +1,7 @@
 namespace Deskverse.Providers;
 
 using Deskverse.Core.Abstractions;
+using Deskverse.Security.Network;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,7 +34,9 @@ public static class ProviderServiceExtensions
                 }
             });
 
-        services.AddHttpClient<WallhavenProvider>();
+        services.AddHttpClient<WallhavenProvider>()
+            .ConfigurePrimaryHttpMessageHandler(static () =>
+                HardenedHttpClient.CreateHandler(TimeSpan.FromSeconds(10)));
         services.AddSingleton<IWallpaperProvider>(sp => sp.GetRequiredService<WallhavenProvider>());
 
         services.AddSingleton<ProviderAggregator>();

@@ -6,6 +6,7 @@ using Deskverse.Infrastructure.Persistence;
 using Deskverse.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.Versioning;
 
 public static class InfrastructureServiceExtensions
 {
@@ -13,6 +14,7 @@ public static class InfrastructureServiceExtensions
     /// Registers persistence, repositories, Win32 system services, and the database
     /// initializer. Call <see cref="DatabaseInitializer.InitializeAsync"/> during startup.
     /// </summary>
+    [SupportedOSPlatform("windows")]
     public static IServiceCollection AddDeskverseInfrastructure(this IServiceCollection services)
     {
         services.AddSingleton<IAppEnvironment, WindowsAppEnvironment>();

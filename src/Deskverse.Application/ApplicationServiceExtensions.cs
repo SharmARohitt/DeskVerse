@@ -17,12 +17,26 @@ public static class ApplicationServiceExtensions
     {
         services.AddOptions<SecurityOptions>();
 
-        services.AddHttpClient<SecureDownloadService>();
+        // Downloads are bounded by SecureDownloadService's own cancellation token,
+        // so the transport-level timeout is disabled here.
+        services.AddHttpClient<SecureDownloadService>(client => client.Timeout = Timeout.InfiniteTimeSpan)
+            .ConfigurePrimaryHttpMessageHandler(static () =>
+                HardenedHttpClient.CreateHandler(TimeSpan.FromSeconds(15)));
+
         services.AddSingleton<UrlPolicy>();
         services.AddSingleton<ImportValidator>();
 
         services.AddSingleton<PreferencesCachePolicy>();
+        // The cache policy is read through the abstraction everywhere else, so the
+        // preferences-backed implementation has to be the registered one.
+        services.AddSingleton<Deskverse.Storage.ICachePolicy>(sp => sp.GetRequiredService<PreferencesCachePolicy>());
         services.AddSingleton<Storage.CacheManager>();
+
+        // RecommendationService takes the scoring engine, so it must be resolvable
+        // from the same container; the engine is stateless and shares one instance.
+        services.AddOptions<Deskverse.Intelligence.RecommendationOptions>();
+        services.AddSingleton<Deskverse.Intelligence.RecommendationEngine>();
+
         services.AddSingleton<StorageService>();
         services.AddSingleton<WallpaperManager>();
         services.AddSingleton<DiscoveryService>();
