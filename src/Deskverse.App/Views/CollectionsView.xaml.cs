@@ -1,19 +1,20 @@
 namespace Deskverse.App.Views;
 
 using Deskverse.App.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
 
-/// <summary>Collections page code-behind: loads data on navigation and handles library-picker.</summary>
-public sealed partial class CollectionsView : Page
+public sealed partial class CollectionsView
 {
+    public CollectionsViewModel ViewModel { get; } = App.Services.GetRequiredService<CollectionsViewModel>();
+
     public CollectionsView()
     {
         InitializeComponent();
-        ViewModel = App.Services.GetRequiredService<CollectionsViewModel>();
+        DataContext = ViewModel;
     }
-
-    public CollectionsViewModel ViewModel { get; }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
@@ -21,28 +22,33 @@ public sealed partial class CollectionsView : Page
         _ = ViewModel.LoadAsync();
     }
 
-    private void OnCreateEnter(Microsoft.UI.Xaml.UIElement sender, Microsoft.UI.Xaml.Input.KeyboardAcceleratorInvokedEventArgs args)
+    private async void OnAddStudioSelectionClick(object sender, RoutedEventArgs e)
     {
-        args.Handled = true;
-        ViewModel.CreateCommand.Execute(null);
+        var selected = App.Services.GetRequiredService<MainViewModel>().SelectedForStudio;
+        if (selected is null)
+        {
+            App.Services.GetRequiredService<Services.NotificationService>()
+                .Info("Open a wallpaper in Studio first, then add it here.");
+            return;
+        }
+
+        await ViewModel.AddWallpapersAsync([selected.Model]);
     }
 
-    private async void OnAddFromLibraryClick(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+    private async void OnAddFromLibraryClick(object sender, RoutedEventArgs e)
     {
+        var picker = new LibraryPickerPanel(ViewModel.Manager);
         var dialog = new ContentDialog
         {
-            Title = "Add wallpapers from your library",
-            PrimaryButtonText = "Add selected",
+            Title = "Add wallpapers to this collection",
+            Content = picker,
+            PrimaryButtonText = "Add",
             SecondaryButtonText = "Cancel",
             DefaultButton = ContentDialogButton.Primary,
-            XamlRoot = Content.XamlRoot,
+            XamlRoot = Root.XamlRoot,
         };
 
-        var picker = new LibraryPickerPanel(ViewModel.Manager);
-        dialog.Content = picker;
-
-        var result = await dialog.ShowAsync();
-        if (result == ContentDialogResult.Primary)
+        if (await dialog.ShowAsync() == ContentDialogResult.Primary)
         {
             var selected = picker.GetSelectedWallpapers();
             if (selected.Count > 0)

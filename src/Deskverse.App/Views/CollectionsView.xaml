@@ -5,212 +5,157 @@
     xmlns:conv="using:Deskverse.App.Views"
     xmlns:vm="using:Deskverse.App.ViewModels">
 
-    <Grid>
+    <Grid x:Name="Root" Padding="32,24,32,24">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="260" />
+            <ColumnDefinition Width="320" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Left rail: collection list + create -->
-        <Grid Grid.Column="0" Background="{StaticResource GraphitePanelBrush}">
+        <!-- Left rail: collection list -->
+        <Grid Grid.Column="0" Margin="0,0,16,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Padding="16,20,16,8" Spacing="4">
-                <TextBlock Text="Collections" Style="{StaticResource SectionTitleText}" />
-                <TextBlock Text="Named playlists of wallpapers." Style="{StaticResource CaptionText}" />
+            <StackPanel Grid.Row="0" Style="{StaticResource PageHeaderPanel}">
+                <TextBlock Text="Collections" Style="{StaticResource DisplayTitleText}" />
+                <TextBlock Text="Group wallpapers into playlists and queues." Style="{StaticResource SubtitleText}" />
             </StackPanel>
 
-            <ScrollViewer Grid.Row="1" Padding="8,0,8,8">
+            <StackPanel Grid.Row="1" Spacing="8" Margin="0,0,0,12">
+                <TextBox
+                    PlaceholderText="New collection name"
+                    Text="{x:Bind ViewModel.NewCollectionName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    MaxLength="60" />
+                <Button
+                    Content="Create collection"
+                    Style="{StaticResource PrimaryButtonStyle}"
+                    Command="{x:Bind ViewModel.CreateCommand}" />
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="2" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl ItemsSource="{x:Bind ViewModel.Collections}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="vm:CollectionTileViewModel">
-                            <Button
-                                HorizontalAlignment="Stretch"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                Padding="10,8"
-                                Margin="0,2"
-                                Command="{x:Bind SelectCommand}"
-                                AutomationProperties.Name="{x:Bind Name}">
+                            <Border
+                                Style="{StaticResource CardStyle}"
+                                Padding="12,10"
+                                Margin="0,0,0,8">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="Auto" />
                                     </Grid.ColumnDefinitions>
-                                    <FontIcon
-                                        Grid.Column="0"
-                                        Glyph="{x:Bind Glyph}"
-                                        FontSize="14"
-                                        Foreground="{StaticResource AccentVioletBrush}"
-                                        VerticalAlignment="Center"
-                                        Margin="0,0,10,0" />
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="{x:Bind Name, Mode=OneWay}" Style="{StaticResource SubtitleText}" MaxLines="1" TextTrimming="CharacterEllipsis" />
-                                        <TextBlock Text="{x:Bind CountText, Mode=OneWay}" Style="{StaticResource CaptionText}" />
+                                    <FontIcon Grid.Column="0" Glyph="{x:Bind Glyph}" FontSize="16" Foreground="{StaticResource AccentVioletBrush}" Margin="0,0,10,0" VerticalAlignment="Center" />
+                                    <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                        <TextBlock Text="{x:Bind Name}" Style="{StaticResource SubtitleText}" FontWeight="SemiBold" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{x:Bind CountText}" Style="{StaticResource CaptionText}" />
                                     </StackPanel>
-                                    <Button
-                                        Grid.Column="2"
-                                        Style="{StaticResource DangerButtonStyle}"
-                                        Padding="6,4"
-                                        Command="{x:Bind DeleteCommand}"
-                                        Visibility="{x:Bind conv:Converters.NegateVisibility(IsSystem)}"
-                                        ToolTipService.ToolTip="Delete collection"
-                                        AutomationProperties.Name="Delete collection">
-                                        <FontIcon Glyph="&#xE74D;" FontSize="12" />
-                                    </Button>
+                                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                                        <Button
+                                            Content="Open"
+                                            Style="{StaticResource SecondaryButtonStyle}"
+                                            Padding="10,4"
+                                            Command="{x:Bind SelectCommand}" />
+                                        <Button
+                                            Style="{StaticResource DangerButtonStyle}"
+                                            Padding="7,4"
+                                            Visibility="{x:Bind conv:Converters.NegateVisibility(IsSystem), Mode=OneWay}"
+                                            Command="{x:Bind DeleteCommand}"
+                                            ToolTipService.ToolTip="Delete this collection">
+                                            <FontIcon Glyph="&#xE74D;" FontSize="12" />
+                                        </Button>
+                                    </StackPanel>
                                 </Grid>
-                            </Button>
+                            </Border>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
+        </Grid>
 
-            <!-- Create new collection -->
-            <Border Grid.Row="2" BorderBrush="{StaticResource GraphiteBorderBrush}" BorderThickness="0,1,0,0" Padding="12,10">
-                <StackPanel Spacing="8">
+        <!-- Right detail: selected collection contents -->
+        <Border Grid.Column="1" Style="{StaticResource PanelStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Spacing="8">
                     <TextBox
-                        PlaceholderText="New collection name…"
-                        Text="{x:Bind ViewModel.NewCollectionName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        AutomationProperties.Name="New collection name"
-                        KeyboardAcceleratorPlacementMode="Hidden">
-                        <TextBox.KeyboardAccelerators>
-                            <KeyboardAccelerator Key="Enter" Invoked="OnCreateEnter" />
-                        </TextBox.KeyboardAccelerators>
-                    </TextBox>
-                    <Button
-                        Content="Create"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        HorizontalAlignment="Stretch"
-                        Command="{x:Bind ViewModel.CreateCommand}"
-                        AutomationProperties.Name="Create new collection" />
+                        Header="Collection name"
+                        Text="{x:Bind ViewModel.SelectedDetailTitle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        MaxLength="60" />
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button
+                            Content="Rename"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{x:Bind ViewModel.RenameCommand}" />
+                        <Button
+                            Content="Refresh"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Command="{x:Bind ViewModel.LoadCommand}" />
+                        <Button
+                            x:Name="AddStudioSelectionButton"
+                            Content="Add Studio selection"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Click="OnAddStudioSelectionClick"
+                            ToolTipService.ToolTip="Adds the wallpaper currently open in Studio to this collection" />
+                    </StackPanel>
+                    <TextBlock Text="{x:Bind ViewModel.SelectedDetailSubtitle, Mode=OneWay}" Style="{StaticResource CaptionText}" />
                 </StackPanel>
-            </Border>
-        </Grid>
 
-        <!-- Right: selected collection detail -->
-        <Grid Grid.Column="1" Padding="24,20,24,20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-
-            <!-- Header -->
-            <Grid Grid.Row="0" Margin="0,0,0,12">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <StackPanel Grid.Column="0" Spacing="4">
-                    <TextBlock
-                        Text="{x:Bind ViewModel.SelectedDetailTitle, Mode=OneWay}"
-                        Style="{StaticResource DisplayTitleText}" />
-                    <TextBlock
-                        Text="{x:Bind ViewModel.SelectedDetailSubtitle, Mode=OneWay}"
-                        Style="{StaticResource SubtitleText}" />
-                </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Bottom">
-                    <ProgressRing
-                        Width="20" Height="20"
-                        IsActive="{x:Bind ViewModel.IsBusy, Mode=OneWay}"
-                        Visibility="{x:Bind conv:Converters.ToVisibility(ViewModel.IsBusy), Mode=OneWay}" />
-                    <Button
-                        Content="Add from library"
-                        Style="{StaticResource SecondaryButtonStyle}"
-                        Click="OnAddFromLibraryClick"
-                        Visibility="{x:Bind conv:Converters.ToVisibility(ViewModel.SelectedCollection), Mode=OneWay}"
-                        AutomationProperties.Name="Add wallpapers from your library" />
-                </StackPanel>
-            </Grid>
-
-            <!-- Empty state -->
-            <StackPanel
-                Grid.Row="2"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Spacing="12"
-                Visibility="{x:Bind conv:Converters.ToVisibility(ViewModel.HasNoSelectedItems), Mode=OneWay}">
-                <FontIcon Glyph="&#xE8B7;" FontSize="52" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" />
-                <TextBlock
-                    Text="{x:Bind ViewModel.EmptyStateText, Mode=OneWay}"
-                    Style="{StaticResource SubtitleText}"
-                    HorizontalAlignment="Center" />
-                <TextBlock
-                    Text="Use 'Add from library' to populate it."
-                    Style="{StaticResource CaptionText}"
+                <StackPanel
+                    Grid.Row="1"
+                    Spacing="10"
+                    VerticalAlignment="Center"
                     HorizontalAlignment="Center"
-                    Visibility="{x:Bind conv:Converters.ToVisibility(ViewModel.SelectedCollection), Mode=OneWay}" />
-            </StackPanel>
+                    Visibility="{x:Bind conv:Converters.ToVisibility(ViewModel.HasNoSelectedItems), Mode=OneWay}">
+                    <FontIcon Glyph="&#xE8B7;" FontSize="40" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" />
+                    <TextBlock Text="{x:Bind ViewModel.EmptyStateText, Mode=OneWay}" Style="{StaticResource SubtitleText}" HorizontalAlignment="Center" />
+                    <TextBlock Text="Pick wallpapers in My Wallpapers or Studio and add them here." Style="{StaticResource CaptionText}" HorizontalAlignment="Center" />
+                </StackPanel>
 
-            <!-- Wallpaper grid -->
-            <ScrollViewer Grid.Row="2" Visibility="{x:Bind conv:Converters.NegateVisibility(ViewModel.HasNoSelectedItems), Mode=OneWay}">
-                <ItemsRepeater ItemsSource="{x:Bind ViewModel.SelectedItems}">
-                    <ItemsRepeater.Layout>
-                        <UniformGridLayout MinItemWidth="230" MinItemHeight="260" MinRowSpacing="12" MinColumnSpacing="12" />
-                    </ItemsRepeater.Layout>
-                    <ItemsRepeater.ItemTemplate>
-                        <DataTemplate x:DataType="vm:WallpaperItemViewModel">
-                            <Border Style="{StaticResource PanelStyle}" Padding="10">
-                                <StackPanel Spacing="8">
-                                    <Border Style="{StaticResource CardStyle}" Height="130">
-                                        <Grid>
-                                            <FontIcon
-                                                Glyph="{x:Bind KindGlyph}"
-                                                FontSize="32"
-                                                Foreground="{StaticResource TextMutedBrush}"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center" />
-                                            <Image
-                                                Source="{x:Bind conv:Converters.ToImage(ThumbnailPath), Mode=OneWay}"
-                                                Stretch="UniformToFill" />
-                                            <Border
-                                                Style="{StaticResource InfoPillStyle}"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Top"
-                                                Margin="6">
-                                                <StackPanel Orientation="Horizontal" Spacing="4">
-                                                    <FontIcon Glyph="{x:Bind KindGlyph}" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}" />
-                                                    <TextBlock Text="{x:Bind KindLabel}" Style="{StaticResource CaptionText}" />
-                                                </StackPanel>
-                                            </Border>
-                                        </Grid>
-                                    </Border>
-
-                                    <TextBlock
-                                        Text="{x:Bind Title}"
-                                        Style="{StaticResource SubtitleText}"
-                                        FontWeight="SemiBold"
-                                        MaxLines="1"
-                                        TextTrimming="CharacterEllipsis" />
-                                    <TextBlock Text="{x:Bind DimensionsText}" Style="{StaticResource CaptionText}" />
-
-                                    <StackPanel Orientation="Horizontal" Spacing="6">
-                                        <Button
-                                            Content="Apply"
-                                            Style="{StaticResource PrimaryButtonStyle}"
-                                            Padding="10,5"
-                                            Command="{x:Bind ApplyCommand}"
-                                            AutomationProperties.Name="Apply wallpaper" />
-                                        <Button
-                                            Style="{StaticResource SecondaryButtonStyle}"
-                                            Padding="8,5"
-                                            Command="{x:Bind SelectCommand}"
-                                            ToolTipService.ToolTip="Open in Studio"
-                                            AutomationProperties.Name="Open in Studio">
-                                            <FontIcon Glyph="&#xE90B;" FontSize="13" />
-                                        </Button>
+                <ScrollViewer Grid.Row="1" Padding="0,16,0,0" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
+                    <ItemsRepeater ItemsSource="{x:Bind ViewModel.SelectedItems}">
+                        <ItemsRepeater.Layout>
+                            <UniformGridLayout MinItemWidth="230" MinItemHeight="220" MinRowSpacing="12" MinColumnSpacing="12" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate x:DataType="vm:WallpaperItemViewModel">
+                                <Border Style="{StaticResource CardStyle}" Padding="8">
+                                    <StackPanel Spacing="6">
+                                        <Border Style="{StaticResource CardStyle}" Height="120">
+                                            <Grid>
+                                                <FontIcon Glyph="{x:Bind KindGlyph}" FontSize="28" Foreground="{StaticResource TextMutedBrush}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                <Image Source="{x:Bind conv:Converters.ToImage(ThumbnailPath), Mode=OneWay}" Stretch="UniformToFill" />
+                                            </Grid>
+                                        </Border>
+                                        <TextBlock Text="{x:Bind Title}" Style="{StaticResource SubtitleText}" FontWeight="SemiBold" MaxLines="1" TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Text="{x:Bind DimensionsText}" Style="{StaticResource CaptionText}" />
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Button Content="Apply" Style="{StaticResource PrimaryButtonStyle}" Padding="10,4" Command="{x:Bind ApplyCommand}" />
+                                            <Button Content="Studio" Style="{StaticResource SecondaryButtonStyle}" Padding="10,4" Command="{x:Bind SelectCommand}" />
+                                            <Button
+                                                Style="{StaticResource DangerButtonStyle}"
+                                                Padding="7,4"
+                                                Command="{Binding DataContext.RemoveItemCommand, ElementName=Root}"
+                                                CommandParameter="{x:Bind}"
+                                                ToolTipService.ToolTip="Remove from this collection (keeps the wallpaper in your library)">
+                                                <FontIcon Glyph="&#xE738;" FontSize="12" />
+                                            </Button>
+                                        </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
-            </ScrollViewer>
-        </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </ScrollViewer>
+            </Grid>
+        </Border>
     </Grid>
 </Page>
