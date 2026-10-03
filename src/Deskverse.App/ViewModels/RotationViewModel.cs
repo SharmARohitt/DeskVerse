@@ -23,24 +23,31 @@ public partial class RotationViewModel : ViewModelBase
     private readonly ILogger<RotationViewModel> _logger;
 
     [ObservableProperty]
+
     private bool _isRunning;
 
     [ObservableProperty]
+
     private bool _isEnabled;
 
     [ObservableProperty]
-    private string _rotationModeLabel = "Random";
+
+    private string _rotationModeLabel= "Random";
 
     [ObservableProperty]
-    private string _intervalLabel = "1 hour";
+
+    private string _intervalLabel= "1 hour";
 
     [ObservableProperty]
-    private string _nextAtText = "—";
+
+    private string _nextAtText= "—";
 
     [ObservableProperty]
+
     private CollectionTileViewModel? _selectedCollection;
 
     [ObservableProperty]
+
     private bool _isBusy;
 
     public RotationViewModel(

@@ -23,21 +23,27 @@ public partial class DiscoverViewModel : ViewModelBase
     private readonly ILogger<DiscoverViewModel> _logger;
 
     [ObservableProperty]
+
     private bool _isBusy;
 
     [ObservableProperty]
-    private string _searchText = string.Empty;
+
+    private string _searchText= string.Empty;
 
     [ObservableProperty]
-    private string _statusText = "Browsing trending wallpapers\u2026";
+
+    private string _statusText= "Browsing trending wallpapers\u2026";
 
     [ObservableProperty]
+
     private bool _hasFailures;
 
     [ObservableProperty]
-    private string _failureSummary = string.Empty;
+
+    private string _failureSummary= string.Empty;
 
     [ObservableProperty]
+
     private bool _hasResults;
 
     public DiscoverViewModel(

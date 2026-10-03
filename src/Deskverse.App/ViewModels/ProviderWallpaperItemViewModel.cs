@@ -12,6 +12,7 @@ public partial class ProviderWallpaperItemViewModel : ObservableObject
     private readonly DiscoverViewModel _owner;
 
     [ObservableProperty]
+
     private bool _isDownloading;
 
     public ProviderWallpaperItemViewModel(ProviderWallpaper model, string providerName, DiscoverViewModel owner)

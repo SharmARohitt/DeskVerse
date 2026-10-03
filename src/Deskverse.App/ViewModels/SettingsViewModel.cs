@@ -25,70 +25,92 @@ public partial class SettingsViewModel : ViewModelBase
     private UserPreferences _current = new();
 
     [ObservableProperty]
+
     private bool _isBusy;
 
     [ObservableProperty]
-    private bool _allowVideoWallpapers = true;
+
+    private bool _allowVideoWallpapers= true;
 
     [ObservableProperty]
-    private bool _pauseVideoOnBattery = true;
+
+    private bool _pauseVideoOnBattery= true;
 
     [ObservableProperty]
-    private bool _pauseVideoOnFullscreen = true;
+
+    private bool _pauseVideoOnFullscreen= true;
 
     [ObservableProperty]
-    private bool _animatedPreviewsEnabled = true;
+
+    private bool _animatedPreviewsEnabled= true;
 
     [ObservableProperty]
-    private string _backgroundPolicyLabel = "Balanced";
+
+    private string _backgroundPolicyLabel= "Balanced";
 
     [ObservableProperty]
-    private bool _autoCleanupEnabled = true;
+
+    private bool _autoCleanupEnabled= true;
 
     [ObservableProperty]
+
     private bool _runAtStartup;
 
     [ObservableProperty]
+
     private bool _minimizeToTray;
 
     [ObservableProperty]
+
     private bool _telemetryOptIn;
 
     [ObservableProperty]
-    private string _storageLimitLabel = "2 GB";
+
+    private string _storageLimitLabel= "2 GB";
 
     [ObservableProperty]
+
     private bool _hasBrightnessPreference;
 
     [ObservableProperty]
-    private double _preferredBrightnessPercent = 50;
+
+    private double _preferredBrightnessPercent= 50;
 
     [ObservableProperty]
-    private string _preferredCategoriesText = string.Empty;
+
+    private string _preferredCategoriesText= string.Empty;
 
     [ObservableProperty]
-    private string _preferredColorsText = string.Empty;
+
+    private string _preferredColorsText= string.Empty;
 
     [ObservableProperty]
-    private string _preferredStylesText = string.Empty;
+
+    private string _preferredStylesText= string.Empty;
 
     [ObservableProperty]
-    private string _apiBaseUrl = "http://127.0.0.1/\u2026";
+
+    private string _apiBaseUrl= "http://127.0.0.1/\u2026";
 
     [ObservableProperty]
-    private string _apiTokenDisplay = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
+
+    private string _apiTokenDisplay= "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
 
     [ObservableProperty]
+
     private bool _tokenRevealed;
 
     [ObservableProperty]
-    private string _cacheDirectoryText = string.Empty;
+
+    private string _cacheDirectoryText= string.Empty;
 
     [ObservableProperty]
-    private string _dataRootText = string.Empty;
+
+    private string _dataRootText= string.Empty;
 
     [ObservableProperty]
-    private string _versionText = "DeskVerse 0.1.0";
+
+    private string _versionText= "DeskVerse 0.1.0";
 
     public SettingsViewModel(
         PreferencesService preferences,
