@@ -17,9 +17,9 @@ public sealed class ApiTokenStore : IDisposable
 
     private readonly IAppEnvironment _environment;
     private readonly ILogger<ApiTokenStore> _logger;
-    private readonly byte[] _tokenHash;
 
     private byte[] _token;
+    private byte[] _tokenHash;
 
     public ApiTokenStore(IAppEnvironment environment, ILogger<ApiTokenStore> logger)
     {
@@ -64,8 +64,14 @@ public sealed class ApiTokenStore : IDisposable
     /// <summary>Regenerates the token and re-persists it encrypted.</summary>
     public void Rotate()
     {
-        _token = RandomNumberGenerator.GetBytes(TokenByteLength);
-        PersistToken(_token);
+        // The token and its hash must swap together. If only the token changed,
+        // IsValid would keep accepting the old secret and reject the new one.
+        var next = RandomNumberGenerator.GetBytes(TokenByteLength);
+        var previous = _token;
+        _token = next;
+        _tokenHash = SHA256.HashData(next);
+        PersistToken(next);
+        CryptographicOperations.ZeroMemory(previous);
         _logger.LogInformation("Local API token rotated.");
     }
 

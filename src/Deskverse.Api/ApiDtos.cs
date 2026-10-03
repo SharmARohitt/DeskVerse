@@ -77,7 +77,6 @@ public sealed record CreateCollectionRequestDto(string Name);
 
 public sealed record CollectionItemRequestDto(Guid WallpaperId);
 
-public sealed record WallpaperIdRequestDto(Guid WallpaperId);
 
 public sealed record CollectionDto(Guid Id, string Name, bool IsSystem, DateTimeOffset CreatedAt)
 {
