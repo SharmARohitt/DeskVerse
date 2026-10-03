@@ -3,6 +3,7 @@ namespace Deskverse.App;
 using Deskverse.App.Services;
 using Deskverse.App.ViewModels;
 using Deskverse.App.Views;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 
@@ -16,18 +17,47 @@ public sealed partial class MainWindow : Window
 
     private readonly MainViewModel _vm;
 
+    private bool _startupComplete;
+
     public MainWindow()
     {
         InitializeComponent();
         _vm = App.Services.GetRequiredService<MainViewModel>();
 
         Title = "DeskVerse";
-        AppWindow.Resize(new Windows.Graphics.SizeInt32(1280, 800));
 
         ExtendsContentIntoTitleBar = true;
         SetTitleBar(AppTitleBar);
 
+        // AppWindow sizing is a no-op until the window has been activated.
+        Activated += OnFirstActivation;
+
+        // Selection is set now, but the page itself is only navigated to once the
+        // database migration has run; views resolve data services in their constructors.
         NavView.SelectedItem = NavHome;
+    }
+
+    private void OnFirstActivation(object sender, WindowActivatedEventArgs args)
+    {
+        if (args.WindowActivationState == WindowActivationState.Deactivated)
+        {
+            return;
+        }
+
+        Activated -= OnFirstActivation;
+
+        var screen = Microsoft.UI.Windowing.DisplayArea.GetFromWindowId(
+            AppWindow.Id, Microsoft.UI.Windowing.DisplayAreaFallback.Nearest);
+
+        AppWindow.Resize(new Windows.Graphics.SizeInt32(1280, 800));
+
+        if (screen is not null)
+        {
+            var work = screen.WorkArea;
+            AppWindow.Move(new Windows.Graphics.PointInt32(
+                work.X + Math.Max(0, (work.Width - AppWindow.Size.Width) / 2),
+                work.Y + Math.Max(0, (work.Height - AppWindow.Size.Height) / 2)));
+        }
     }
 
     private MainViewModel Vm => _vm;
@@ -56,6 +86,13 @@ public sealed partial class MainWindow : Window
 
     private void OnNavigationSelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
     {
+        // Views build the data layer as they are constructed, so the first page is
+        // only navigated to after startup has prepared the database.
+        if (!_startupComplete)
+        {
+            return;
+        }
+
         if (args.SelectedItem is not NavigationViewItem item || item.Tag is not string tag)
         {
             return;
@@ -82,8 +119,13 @@ public sealed partial class MainWindow : Window
     public void OnStartupComplete()
     {
         LoadingOverlay.Visibility = Visibility.Collapsed;
+        _startupComplete = true;
         _vm.MarkReady();
-        ContentFrame.Navigate(typeof(HomeView));
+
+        if (ContentFrame.CurrentSourcePageType != typeof(HomeView))
+        {
+            ContentFrame.Navigate(typeof(HomeView));
+        }
     }
 
     public void ShowFatalError(string message)
@@ -106,7 +148,7 @@ public sealed partial class MainWindow : Window
         var directoryText = new TextBlock
         {
             Text = defaultCacheDirectory,
-            Style = (Style)Resources["BodyText"],
+            Style = (Style)Microsoft.UI.Xaml.Application.Current.Resources["BodyText"],
             TextWrapping = TextWrapping.Wrap,
             MaxLines = 2,
         };
@@ -114,7 +156,6 @@ public sealed partial class MainWindow : Window
         var limitCombo = new ComboBox
         {
             Header = "Storage limit for cached wallpapers",
-            SelectedItem = chosenLimitLabel,
             HorizontalAlignment = HorizontalAlignment.Stretch,
             MinWidth = 220,
         };
@@ -122,6 +163,9 @@ public sealed partial class MainWindow : Window
         {
             limitCombo.Items.Add(label);
         }
+
+        // Selecting before the items exist silently leaves the box blank.
+        limitCombo.SelectedItem = chosenLimitLabel;
 
         limitCombo.SelectionChanged += (_, e) =>
         {
@@ -134,7 +178,7 @@ public sealed partial class MainWindow : Window
         var browseButton = new Button
         {
             Content = "Browse…",
-            Style = (Style)Resources["SecondaryButtonStyle"],
+            Style = (Style)Microsoft.UI.Xaml.Application.Current.Resources["SecondaryButtonStyle"],
         };
         browseButton.Click += async (_, _) =>
         {
@@ -148,7 +192,7 @@ public sealed partial class MainWindow : Window
         };
 
         var directoryRow = new Grid { ColumnSpacing = 10 };
-        directoryRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+        directoryRow.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
         directoryRow.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
         Grid.SetColumn(directoryText, 0);
         Grid.SetColumn(browseButton, 1);
@@ -159,7 +203,7 @@ public sealed partial class MainWindow : Window
         content.Children.Add(new TextBlock
         {
             Text = "DeskVerse keeps a managed cache of wallpapers on this PC. Choose where it lives and how much space it may use. Nothing is ever uploaded, and cleanup always spares the active and pinned wallpapers.",
-            Style = (Style)Resources["BodyText"],
+            Style = (Style)Microsoft.UI.Xaml.Application.Current.Resources["BodyText"],
             TextWrapping = TextWrapping.Wrap,
         });
         content.Children.Add(new StackPanel
@@ -167,7 +211,7 @@ public sealed partial class MainWindow : Window
             Spacing = 8,
             Children =
             {
-                new TextBlock { Text = "Cache location", Style = (Style)Resources["SubtitleText"] },
+                new TextBlock { Text = "Cache location", Style = (Style)Microsoft.UI.Xaml.Application.Current.Resources["SubtitleText"] },
                 directoryRow,
             },
         });

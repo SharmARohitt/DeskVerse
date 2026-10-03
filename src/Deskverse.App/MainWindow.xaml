@@ -26,6 +26,7 @@
             x:Name="NavView"
             Grid.Row="1"
             IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
             IsTitleBarAutoPaddingEnabled="False"
             PaneDisplayMode="Left"
             OpenPaneLength="216"
