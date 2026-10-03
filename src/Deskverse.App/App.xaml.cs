@@ -8,8 +8,10 @@ using Deskverse.Application;
 using Deskverse.Core.Abstractions;
 using Deskverse.Infrastructure;
 using Deskverse.Infrastructure.Persistence;
+using Deskverse.Providers;
 using Deskverse.WallpaperEngine;
 using Deskverse.WallpaperEngine.Playback;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
@@ -56,6 +58,22 @@ public partial class App : Application
 
     protected override void OnLaunched(LaunchActivatedEventArgs args)
     {
+        try
+        {
+            StartCore();
+        }
+        catch (Exception ex)
+        {
+            // Serilog is not necessarily configured yet, so a bootstrap failure is
+            // written straight to the temp folder; without this the app vanishes
+            // with only a Windows error-report entry to explain it.
+            WriteBootstrapFailure(ex);
+            throw;
+        }
+    }
+
+    private void StartCore()
+    {
         _dispatcher = DispatcherQueue.GetForCurrentThread();
         _services = BuildServices();
         Services = _services;
@@ -71,6 +89,23 @@ public partial class App : Application
         _ = Task.Run(RunStartupAsync);
     }
 
+    private static void WriteBootstrapFailure(Exception ex)
+    {
+        try
+        {
+            var path = Path.Combine(Path.GetTempPath(), "DeskVerse-startup-error.log");
+            File.AppendAllText(path, $"{DateTimeOffset.Now:O}{Environment.NewLine}{ex}{Environment.NewLine}{Environment.NewLine}");
+        }
+        catch (IOException)
+        {
+            // Nothing left to try.
+        }
+        catch (UnauthorizedAccessException)
+        {
+            // Nothing left to try.
+        }
+    }
+
     private static ServiceProvider BuildServices()
     {
         var services = new ServiceCollection();
@@ -83,6 +118,11 @@ public partial class App : Application
             var environment = sp.GetRequiredService<IAppEnvironment>();
             configuration
                 .MinimumLevel.Debug()
+                // EF logs every parameterized statement at Information/Debug, which
+                // would dominate the file and drown out actual diagnostics.
+                .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Warning)
+                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                .MinimumLevel.Override("System.Net.Http", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .WriteTo.File(
                     Path.Combine(environment.LogsDirectory, "deskverse-.log"),
@@ -93,9 +133,22 @@ public partial class App : Application
                 .WriteTo.Debug(restrictedToMinimumLevel: LogEventLevel.Debug);
         });
 
-        // Empty IConfiguration so provider options binding doesn't throw on startup.
-        services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(
-            _ => new Microsoft.Extensions.Configuration.ConfigurationBuilder().Build());
+        // Provider settings (API keys, purity, page size) come from an optional
+        // JSON file in the app data directory, then environment variables override it.
+        services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(_ =>
+        {
+            var builder = new Microsoft.Extensions.Configuration.ConfigurationBuilder();
+            var path = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "DeskVerse", "settings.json");
+            if (File.Exists(path))
+            {
+                builder.AddJsonFile(path, optional: true, reloadOnChange: false);
+            }
+
+            builder.AddEnvironmentVariables("DESKVERSE_");
+            return builder.Build();
+        });
 
         services.AddDeskverseInfrastructure();
         services.AddDeskverseProviders();
