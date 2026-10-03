@@ -1,0 +1,28 @@
+# Build output
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+*.user
+*.suo
+
+# Tooling
+.vs/
+.vscode/
+.idea/
+*.DotSettings.user
+
+# EF design-time scratch
+*-design.db
+*.db-shm
+*.db-wal
+
+# Test output
+TestResults/
+*.trx
+coverage*.xml
+
+# OS
+Thumbs.db
+Desktop.ini
