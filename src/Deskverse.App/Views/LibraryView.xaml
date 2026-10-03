@@ -94,7 +94,7 @@
                 HorizontalAlignment="Center" />
         </StackPanel>
 
-        <ScrollViewer Grid.Row="3" Padding="32,4,32,12">
+        <ScrollViewer Grid.Row="3" Padding="32,4,32,12" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
             <ItemsRepeater ItemsSource="{x:Bind ViewModel.Items}">
                 <ItemsRepeater.Layout>
                     <UniformGridLayout MinItemWidth="270" MinItemHeight="280" MinRowSpacing="14" MinColumnSpacing="14" />

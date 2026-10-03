@@ -5,7 +5,7 @@
     xmlns:conv="using:Deskverse.App.Views"
     xmlns:vm="using:Deskverse.App.ViewModels">
 
-    <ScrollViewer Padding="32,24,32,24">
+    <ScrollViewer Padding="32,24,32,24" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
         <StackPanel Spacing="20" MaxWidth="800" HorizontalAlignment="Left">
 
             <StackPanel Style="{StaticResource PageHeaderPanel}">

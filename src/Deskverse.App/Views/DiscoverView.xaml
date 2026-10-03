@@ -12,7 +12,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ScrollViewer Grid.Row="0">
+        <ScrollViewer Grid.Row="0" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
             <StackPanel Spacing="16" Padding="32,24,32,12" MaxWidth="1180" HorizontalAlignment="Left">
                 <StackPanel Style="{StaticResource PageHeaderPanel}">
                     <TextBlock Text="Discover" Style="{StaticResource DisplayTitleText}" />
@@ -112,7 +112,7 @@
                 <TextBlock Text="Check your connection, or search for something else." Style="{StaticResource CaptionText}" HorizontalAlignment="Center" />
             </StackPanel>
 
-            <ScrollViewer Grid.Row="1" Padding="32,0,32,24">
+            <ScrollViewer Grid.Row="1" Padding="32,0,32,24" HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled">
                 <ItemsRepeater ItemsSource="{x:Bind ViewModel.Results}">
                     <ItemsRepeater.Layout>
                         <UniformGridLayout MinItemWidth="280" MinItemHeight="240" MinRowSpacing="14" MinColumnSpacing="14" />

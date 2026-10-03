@@ -3,6 +3,7 @@ namespace Deskverse.App.Views;
 using Deskverse.Application;
 using Deskverse.Core.Entities;
 using Deskverse.Core.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media.Imaging;
@@ -52,7 +53,7 @@ public sealed class LibraryPickerPanel : StackPanel
             var row = new Grid { ColumnSpacing = 10, Padding = new Thickness(4, 5, 4, 5) };
             row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(56) });
-            row.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Star });
+            row.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             Grid.SetColumn(cb, 0);
             Grid.SetColumn(img, 1);
             Grid.SetColumn(title, 2);
