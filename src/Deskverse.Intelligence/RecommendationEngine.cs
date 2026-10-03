@@ -273,7 +273,7 @@ public sealed class RecommendationEngine
         var ageDays = Math.Max(0, (nowUtc - wallpaper.CreatedAt).TotalDays);
         var contribution = 1.0 / (1.0 + ageDays / Math.Max(1, _options.FreshnessHalfLifeDays));
         return new RecommendationFactor("Freshness", _options.FreshnessWeight, contribution,
-            $"added {ageDays:N0} days ago");
+            ageDays < 1 ? "added today" : $"added {ageDays:N0} days ago");
     }
 
     private RecommendationFactor ScoreRepetitionPenalty(CandidateContext usage, DateTimeOffset nowUtc)
@@ -295,8 +295,16 @@ public sealed class RecommendationEngine
         var intensity = Math.Clamp(usage.UseCount / 10.0, 0, 1);
         var contribution = Math.Clamp(0.5 * recency + 0.5 * intensity, 0, 1);
         return new RecommendationFactor("RepetitionPenalty", _options.RepetitionPenaltyWeight, contribution,
-            $"used {usage.UseCount}× recently, last {daysSince:N0} day(s) ago");
+            $"used {usage.UseCount}× recently, last {DescribeAge(daysSince)}");
     }
+
+    /// <summary>Renders an age in whole days as the phrase a person would say.</summary>
+    private static string DescribeAge(double days) => days switch
+    {
+        < 1 => "today",
+        < 2 => "yesterday",
+        _ => $"{days:N0} days ago",
+    };
 
     private RecommendationFactor ScoreResourceCost(Wallpaper wallpaper, BackgroundResourcePolicy policy)
     {
@@ -348,7 +356,9 @@ public sealed class RecommendationEngine
         var segments = new List<string>();
         if (positives.Count > 0)
         {
-            segments.Add($"matches {string.Join(", and ", positives)}");
+            // Each detail is a fragment ("pixel-perfect for 1920×1080"), so they are
+            // listed rather than chained onto a verb that only fits some of them.
+            segments.Add(string.Join(", and ", positives));
         }
 
         if (penalties.Count > 0)
@@ -357,7 +367,7 @@ public sealed class RecommendationEngine
         }
 
         return segments.Count > 0
-            ? $"Recommended because it {string.Join("; ", segments)}."
+            ? $"Recommended: {string.Join("; ", segments)}."
             : "Recommended from your library with neutral scores so far.";
     }
 }
