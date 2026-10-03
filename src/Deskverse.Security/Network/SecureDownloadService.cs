@@ -69,8 +69,13 @@ public sealed class SecureDownloadService
 
             if (!response.IsSuccessStatusCode)
             {
+                // Redirects land here because the transport is configured not to
+                // follow them: the URL policy only vetted the address we were given.
+                var redirectNote = (int)response.StatusCode is >= 300 and < 400
+                    ? " Redirects are not followed."
+                    : string.Empty;
                 return OperationResult<DownloadedFile>.Fail(
-                    $"Provider returned {(int)response.StatusCode} {response.StatusCode}.");
+                    $"Provider returned {(int)response.StatusCode} {response.StatusCode}.{redirectNote}");
             }
 
             if (response.Content.Headers.ContentLength is { } declared && declared > _options.MaxDownloadBytes)
@@ -86,26 +91,32 @@ public sealed class SecureDownloadService
             }
 
             await using var source = await response.Content.ReadAsStreamAsync(timeoutCts.Token).ConfigureAwait(false);
-            await using var target = new FileStream(tempPath, FileMode.CreateNew, FileAccess.Write, FileShare.None,
-                bufferSize: 81920, useAsync: true);
 
             using var sha = SHA256.Create();
             var buffer = new byte[81920];
             long total = 0;
-            int read;
-            while ((read = await source.ReadAsync(buffer.AsMemory(), timeoutCts.Token).ConfigureAwait(false)) > 0)
-            {
-                total += read;
-                if (total > _options.MaxDownloadBytes)
-                {
-                    await target.DisposeAsync().ConfigureAwait(false);
-                    TryDelete(tempPath);
-                    return OperationResult<DownloadedFile>.Fail(
-                        $"Download exceeded the limit of {_options.MaxDownloadBytes:N0} bytes and was aborted.");
-                }
 
-                sha.TransformBlock(buffer, 0, read, buffer, 0);
-                await target.WriteAsync(buffer.AsMemory(0, read), timeoutCts.Token).ConfigureAwait(false);
+            // The write handle must be closed before the file is reopened for
+            // verification and before any failed attempt is deleted; Windows denies
+            // both while the stream is still held with FileShare.None.
+            await using (var target = new FileStream(tempPath, FileMode.CreateNew, FileAccess.Write, FileShare.None,
+                bufferSize: 81920, useAsync: true))
+            {
+                int read;
+                while ((read = await source.ReadAsync(buffer.AsMemory(), timeoutCts.Token).ConfigureAwait(false)) > 0)
+                {
+                    total += read;
+                    if (total > _options.MaxDownloadBytes)
+                    {
+                        await target.DisposeAsync().ConfigureAwait(false);
+                        TryDelete(tempPath);
+                        return OperationResult<DownloadedFile>.Fail(
+                            $"Download exceeded the limit of {_options.MaxDownloadBytes:N0} bytes and was aborted.");
+                    }
+
+                    sha.TransformBlock(buffer, 0, read, buffer, 0);
+                    await target.WriteAsync(buffer.AsMemory(0, read), timeoutCts.Token).ConfigureAwait(false);
+                }
             }
 
             sha.TransformFinalBlock([], 0, 0);
@@ -119,9 +130,13 @@ public sealed class SecureDownloadService
 
             // Final signature check on the staged file; extensions and content types
             // are advisory, bytes are authoritative.
-            await using var verifyStream = new FileStream(tempPath, FileMode.Open, FileAccess.Read, FileShare.Read,
-                bufferSize: 81920, useAsync: true);
-            var detected = await FileSignatureValidator.DetectFormatAsync(verifyStream, cancellationToken).ConfigureAwait(false);
+            WallpaperFormat detected;
+            await using (var verifyStream = new FileStream(tempPath, FileMode.Open, FileAccess.Read, FileShare.Read,
+                bufferSize: 81920, useAsync: true))
+            {
+                detected = await FileSignatureValidator.DetectFormatAsync(verifyStream, cancellationToken).ConfigureAwait(false);
+            }
+
             if (detected == WallpaperFormat.Unknown)
             {
                 TryDelete(tempPath);
@@ -164,7 +179,7 @@ public sealed class SecureDownloadService
         {
             File.Delete(path);
         }
-        catch (IOException ex)
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
             _logger.LogWarning(ex, "Could not remove partial download {File}", Path.GetFileName(path));
         }

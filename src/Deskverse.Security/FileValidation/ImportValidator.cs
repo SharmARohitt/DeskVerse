@@ -58,12 +58,6 @@ public sealed class ImportValidator
             return ImportValidationResult.Reject(path, ImportRejectReason.PathTraversal, "Path contains a null byte.");
         }
 
-        // Reject obvious traversal sequences before FileInfo canonicalises them.
-        if (path.Contains("..") && (path.Contains('/') || path.Contains('\\')))
-        {
-            // Full canonicalization happens below; this is a fast early-out.
-        }
-
         FileInfo info;
         try
         {
