@@ -179,7 +179,7 @@ public sealed class CacheManager
                 return CacheCleanupResult.Insufficient(
                     finalProjected,
                     _policy.LimitBytes,
-                    $"Cannot free enough space: {finalProjected / (1024.0 * 1024 * 1024):N2} GB needed against a {_policy.LimitBytes / (1020.0 * 1024 * 1024):N1} GB limit. Increase the limit, choose another folder, or cancel.");
+                    $"Cannot free enough space: {finalProjected / (1024.0 * 1024 * 1024):N2} GB needed against a {_policy.LimitBytes / (1024.0 * 1024 * 1024):N1} GB limit. Increase the limit, choose another folder, or cancel.");
             }
 
             return new CacheCleanupResult
